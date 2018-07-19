@@ -64,7 +64,7 @@ Eventhough Beast broke the protocol, there exists ways to mitigate them on the c
 
 '''But can you support older version nonetheless?'''
 
-POODLE and BEAST are attacks that usually imply a browser-based client. This is because the attack requires several things:
+POODLE and <a href="https://cryptologie.net/article/413/beast-an-explanation-of-the-cbc-attack-on-tls/">BEAST</a> are attacks that usually imply a browser-based client. This is because the attack requires several things:
 
 # you need to execute code on the client in order to emite specific packets
 # the decryption is possible because you know most of the bytes in a client's packet. This is usually true for browsers because we know what kind of requests they are making and we only care about stealing a cookie or a secret that is repeteadly included in the client messages.
@@ -150,42 +150,47 @@ openssl x509 -in yourcert.pem -noout -text
 # unicornator helps you looking at certificates as well
 # <a href="https://www.cryptologie.net/article/374/common-x509-certificate-validationcreation-pitfalls"></a>
 
-=== How to scan a server? ===
+=== How to test a TLS server as a blackbox? ===
 
-# you scan easily TLS with tools like 
-    - testssl.sh
-    - sslyzer
-    - https://github.com/mozilla/tls-observatory
-    - https://github.com/mozilla/cipherscan
-    - https://www.bolet.org/TestSSLServer/
+The easy way to test a server is to scan it via open source tools like:
 
-# careful though, they might give out results without much explanations
+# <a href="https://testssl.sh/">testssl</a>
+# <a href="https://github.com/nabla-c0d3/sslyze">sslyze</a>
+# https://github.com/mozilla/tls-observatory
+# https://github.com/mozilla/cipherscan
+# https://www.bolet.org/TestSSLServer/
 
-# online scanners:
-    - https://www.ssllabs.com/ssltest/
+Unfortunately outputs obtained from these tools are often not clear and are sometimes false positives. 
 
-# openssl has a limited client
+Online scanners like <a href="https://www.ssllabs.com/ssltest/">SSLlabs</a> exist.
 
-<pre><code>
-openssl s_client -connect google.com:443
-</code></pre>
+The OpenSSL CLI can be used as a client:
 
-# socat can usually do some stuff as well:
+<pre><code>$ openssl s_client -connect google.com:443</code></pre>
 
-<pre><code>
-socat 
-</code></pre>
+Socat can also be handful:
 
-=== how to test clients? ===
+<pre><code>$ socat stdio openssl-connect:google.com:443,cert=$HOME/etc/client.pem,cafile=$HOME/etc/server.crt</code></pre>
 
-# https://badssl.com/ 
+=== how to test a TLS client as a blackbox? ===
+
+To test TLS clients that are meant to accept any valid certificates, one handy website is <a href="https://badssl.com/">badssl.com</a> which is a collection of webservers serving "bad" certificates. Your client should always refuse these.
+
+Some TLS clients are meant to only accept a set of certificates, for example a mobile application connecting to https://api.mywebsite.com should not accept a server broadcasting valid certificate for https://www.evil.com. To test these you can try to man-the-middle the connection via tools like <a href="https://mitmproxy.org/">mitmproxy</a>.
+
+Furthermore, wireshark can be used to analyze if clients correctly split AES-CBC payloads to mitigate against the BEAST attack.
+
+<img src="https://i.imgur.com/Tyrtb20.png">
+
 
 === How to configure a TLS server correctly? ===
 
-# https://mozilla.github.io/server-side-tls/ssl-config-generator/?hsts=no
-# https://wiki.mozilla.org/Security/Server_Side_TLS
+To configure Apache / Nginx / Lighttpd / HAProxy / AWS ELB, Mozilla's <a href="https://mozilla.github.io/server-side-tls/ssl-config-generator/?hsts=no">SSL config generator</a> is the go-to resource. Mozilla also publishes a <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">server-side TLS set of security consideration</a>.
 
-Go: https://github.com/gtank/cryptopasta/blob/master/tls_test.go
+For language-specific configurations, refer to:
+
+# <a href="https://github.com/gtank/cryptopasta/blob/master/tls_test.go">Go</a>
+# ...
 
 === Tools ===
 
@@ -213,8 +218,8 @@ Go: https://github.com/gtank/cryptopasta/blob/master/tls_test.go
 # Unfortunately SSL/TLS has suffered from many implementation flaws
 # the most famous one being heartbleed of course
 
-# BoringSSL (libreSSL?)
 # BearSSL
+# BoringSSL (libreSSL?)
 # Everest https://project-everest.github.io/
 
 === What about DTLS? ===
