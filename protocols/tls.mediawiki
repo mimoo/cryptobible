@@ -1,5 +1,3 @@
-
-
 To '''encrypt communications between endpoints''', several protocols exist. The most populars being '''TLS''', '''SSH''' and '''IPSEC'''. Each usually being used for different purposes. Yet, many developers will often feel the need to re-invent the wheel and create their own "proprietary" protocol. You've heard the saying "don't roll your own crypto", so you know you should use TLS. If you're not using TLS because you have an excellent reason not to use TLS, you are allowed to consider the <a href="http://noiseprotocol.org/">Noise protocol framework</a>, but keep in mind that even Noise requires you to understand what you're doing.
 
 == TLS ==
@@ -56,26 +54,37 @@ The design of SSL/TLS has had many broken versions in the past. For this reason,
 
 '''Ideally, only TLS 1.1, 1.2 and 1.3 should be supported'''. Hyper ideally, only the last version (TLS 1.3) should be supported.
 
-=== Can older versions be supported? ===
+=== Can TLS 1.0 and 1.1 still be supported? ===
 
-Unfortunately, many clients continue to use older versions and it is sometimes needed to continue to support them. In particular, it sometimes comes to the point where companies take the decision to support SSL 3 and TLS 1.0.
+Unfortunately, many clients continue to use older versions and it is sometimes tricky to continue to support them. This leads to the question, can we support older version securely?
 
-Eventhough Beast broke the protocol, there exists ways to mitigate them on the client-side (which most modern browsers implement): https://cryptologie.net/article/413/beast-an-explanation-of-the-cbc-attack-on-tls/ .With that in mind, '''supporting TLS 1.0 is possible, but not recommended'''.
+Note that if you need to follow strong regulations like the <a href="https://www.pcisecuritystandards.org/">PCI DSS</a>, <a href="https://www.comodo.com/e-commerce/ssl-certificates/tls-1-deprecation.php">Anything under TLS 1.1 has been deprecated</a> which should facilitate this answer.
 
-'''But can you support older version nonetheless?'''
+'''Non-web browser <-> web server setup''' Both <a href="https://www.dfranke.us/posts/2014-10-14-how-poodle-happened.html">POODLE</a> (SSL 3.0) and <a href="https://cryptologie.net/article/413/beast-an-explanation-of-the-cbc-attack-on-tls/">BEAST (TLS 1.0)</a> are attacks that usually imply a browser-based client. This is because the attack has several requirements:
 
-POODLE and <a href="https://cryptologie.net/article/413/beast-an-explanation-of-the-cbc-attack-on-tls/">BEAST</a> are attacks that usually imply a browser-based client. This is because the attack requires several things:
-
-# you need to execute code on the client in order to emite specific packets
-# the decryption is possible because you know most of the bytes in a client's packet. This is usually true for browsers because we know what kind of requests they are making and we only care about stealing a cookie or a secret that is repeteadly included in the client messages.
+# the attacker needs a way to '''execute malicious code on the client-side''' in order to emite specific SSL/TLS packets (this is usually done by serving malicious javascript to the client)
+# each client's encrypted '''packet content is in part known''' (usually true for browsers since we know what HTTP requests look like)
+# what we want to steal is '''repeatedly and automatically sent in every requests''' emitted by the client (we are usually targeting a cookie)
 
 For this reason, '''most of the non-browser-webserver scenarios might not be vulnerable to these attacks'''. Nonetheless attacks only get better and one should not rely on a specific scenario to mitigate a powerful attack.
 
+'''Web browser <-> web server setup'''. While SSL 3.0 is pretty much broken and can even endanger secure versions of TLS (<a href="https://drownattack.com/">DROWN</a>), we know ways to <a href="https://cryptologie.net/article/413/beast-an-explanation-of-the-cbc-attack-on-tls/">mitigate the BEAST attack on TLS 1.0</a>. These mitigations are implemented in all modern browsers which let us conclude that <a href="https://blog.qualys.com/ssllabs/2013/09/10/is-beast-still-a-threat">BEAST is no longer a threat</a>. With that in mind, '''supporting TLS 1.0 is possible, but not recommended'''.
 
-# <a href="https://blog.qualys.com/ssllabs/2013/09/10/is-beast-still-a-threat">is BEAST still a threat</a>
-# SSL3 ~ ok if you can fight downgrade attacks (DROWN) there is an RFC for that: https://tools.ietf.org/html/rfc7507
+=== Can SSL 3.0 still be supported? ===
 
-Note that some regulations (like the <a href="https://www.comodo.com/e-commerce/ssl-certificates/tls-1-deprecation.php)">PCI</a> might be more strict on what versions you are allowed to use.
+No. It is completely broken by the POODLE attack and the numerous attacks on RC4.
+
+=== How to support several versions? ===
+
+There are two problems with that:
+
+* re-using keys can sometimes lead to problems, see next section (although the consensus seems to be that if you're using secure versions you should be alright)
+* some clients will sometimes try to re-connect with a lower version if they can't connect to your latest version, if an adversary is preventing them to connect with TLS 1.1 for example they will maybe attempt to connect with TLS 1.0 and maybe lower their security. This is called a fallback and servers have ways to advertise that it happened to clients (but clients need to check for these). At this point it is a best effort for the server, check tls_fallback_scsv for tls 1.2 and fallback for tls 1.3
+
+=== Can I re-use a server's private key? ===
+
+* This is bad practice
+* see DROWN
 
 === What Cipher Suites are secure? ===
 
@@ -87,6 +96,9 @@ A perfect whitelist of cipher suites would include combinations of the following
 # hash: SHA-256, SHA-384 or SHA-521
 
 For example the following cipher suite would be a good candidate <code>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</code>.
+
+=== How to read a Ciphersuite? ===
+
 Note that OpenSSL is stupid and has renamed all the ciphersuites. Fortunately the OWASP has a <a href="https://www.owasp.org/index.php/TLS_Cipher_String_Cheat_Sheet=Table_of_the_ciphers_.28and_their_priority_from_high_.281.29_to_low_.28e.g._19.29.29">translation table</a>.
 
 Nonetheless, this doesn't mean that other algorithms are not secure.
@@ -115,7 +127,15 @@ Note that sometimes, you want to support older clients that do not have better o
 <blockquote> Similarly, GFEs will prefer RC4 over AES-CBC only for low protocol versions (SSLv3/TLSv1) because negotiating these versions with AES-CBC would leave the clients vulnerable to POODLE. </blockquote>
 # https://sites.google.com/site/bughunteruniversity/nonvuln/commonly-reported-ssl-tls-vulnerabilities
 
-=== 0-RTT ===
+=== Is renog a problem in TLS? ===
+
+Probably not, see ekr blog post, but disable it nonetheless
+
+=== What is DER, .pem, ASN.1, x509, base64, etc. ? ===
+
+tktktk
+
+=== Is 0-RTT OK in TLS 1.3? ===
 
 TLS 1.3 introduces a new concept called "0-RTT" or "early data" which allows clients to send encrypted requests to servers during their very first flight of messages. Because of the design of this feature, these messages are not forward-secure and are '''replayable'''. This is a problem if such requests can mutate the state of the server.
 
@@ -144,6 +164,10 @@ TLS 1.3 servers that enable this feature should also maintain such a whitelist (
 openssl x509 -in yourcert.pem -noout -text
 </code></pre>
 
+# https://github.com/zmap/zlint ?
+# https://github.com/briansmith/webpki ?
+# https://github.com/square/certstrap
+
 <a href="">check more openssl handies here</a>
 
 # how to store a certificate?
@@ -159,6 +183,7 @@ The easy way to test a server is to scan it via open source tools like:
 # https://github.com/mozilla/tls-observatory
 # https://github.com/mozilla/cipherscan
 # https://www.bolet.org/TestSSLServer/
+# https://github.com/tomato42/tlsfuzzer
 
 Unfortunately outputs obtained from these tools are often not clear and are sometimes false positives. 
 
