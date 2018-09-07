@@ -19,11 +19,6 @@ The design of SSL/TLS has had many broken versions in the past. For this reason,
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>SSL 2</td>
-<td>no</td>
-<td>TKTK</td>
-</tr>
 <tr class="even">
 <td>SSL 3</td>
 <td>no</td>
@@ -72,19 +67,20 @@ For this reason, '''most of the non-browser-webserver scenarios might not be vul
 
 === Can SSL 3.0 still be supported? ===
 
-No. It is completely broken by the POODLE attack and the numerous attacks on RC4.
+<a href="https://disablessl3.com/">No. It is completely broken by the POODLE attack and the numerous attacks on RC4.</a>
 
-=== How to support several versions? ===
+=== How to support several versions of TLS? ===
 
-There are two problems with that:
+The first problem in supporting several versions of TLS is in the certificates presented by the server (and possibly the client). If they are the same accross different versions of TLS, we are doing what is effectively called "key re-use". The next question "Can I re-use a server's private key?" approaches the problems with that.
+In addition, clients will often "fallback" to older versions if they cannot connect to more recent versions. This is all done in good faith but can in some cases be induced by malicious man-in-the-middle attackers. This is what we call "downgrade attacks". Fortunately, we have mitigations against these which need to be implemented on both side of the protocol.
+On the client-side of things, a fake <a href="">tls_fallback_scsv</a> cipher suite can be sent after doing a fallback to signal to the server what happened. The server can then check if both endpoints indeed support a more recent version of TLS than is being negotiated.
+On the server-side of things, TLS 1.3-enabled servers who support lower TLS versions must include a hint that they support TLS 1.3 <a href="https://tools.ietf.org/html/rfc8446#section-4.1.3">in their random value</a>.
 
-* re-using keys can sometimes lead to problems, see next section (although the consensus seems to be that if you're using secure versions you should be alright)
-* some clients will sometimes try to re-connect with a lower version if they can't connect to your latest version, if an adversary is preventing them to connect with TLS 1.1 for example they will maybe attempt to connect with TLS 1.0 and maybe lower their security. This is called a fallback and servers have ways to advertise that it happened to clients (but clients need to check for these). At this point it is a best effort for the server, check tls_fallback_scsv for tls 1.2 and fallback for tls 1.3
+Note that these mitigations are "best-effort", if the other side does not implement them they will be ignored.
 
 === Can I re-use a server's private key? ===
 
-* This is bad practice
-* see DROWN
+Has research has shown [<a href="https://crypto.stanford.edu/RealWorldCrypto/slides/kenny.pdf">Key Reuse: Theory and Practice, <a href="https://drownattack.com/">DROWN</a>]. Key re-use accross applications and protocols can lead to severe vulnerabilities. For this reason, it is advised to use a server's private key only for the purpose it was designed for.
 
 === What Cipher Suites are secure? ===
 
