@@ -6,7 +6,7 @@ While TLS is usually used between browsers and webservers, there are no limitati
 
 Note that TLS is sometimes seen deeply integrated with another kind of protocol. For example the QUIC protocol (sometimes refered to as TCP 2.0) has encryption by default thanks to TLS.
 
-=== What Versions Should Be Supported? ===
+=== What Versions SSL/TLS Are Secure? ===
 
 The design of SSL/TLS has had many broken versions in the past. For this reason, nobody uses SSL anymore (which ended at version 3) and more secure versions of TLS (1.2 and 1.3) are pushed.
 
@@ -69,7 +69,7 @@ For this reason, '''most of the non-browser-webserver scenarios might not be vul
 
 While <a href="https://sites.google.com/site/bughunteruniversity/nonvuln/commonly-reported-ssl-tls-vulnerabilities">some companies</a> still support SSL 3.0, it is a difficult endeavor as the protocol is completely broken by the POODLE attack and the numerous attacks on RC4. You should <a href="https://disablessl3.com/">not support it</a> unless you have extremely good reasons and you know what you're doing.
 
-=== How To Support Several Versions Of TLS? ===
+=== Can I Support Several Versions Of TLS? ===
 
 The first problem in supporting several versions of TLS is in the certificates presented by the server (and possibly the client). If they are the same accross different versions of TLS, we are doing what is effectively called "key re-use". The next question "Can I re-use a server's private key?" approaches the problems with that.
 
