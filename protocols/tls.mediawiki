@@ -55,7 +55,7 @@ Unfortunately, many clients continue to use older versions and it is sometimes t
 
 Note that if you need to follow strong regulations like the <a href="https://www.pcisecuritystandards.org/">PCI DSS</a>, <a href="https://www.comodo.com/e-commerce/ssl-certificates/tls-1-deprecation.php">Anything under TLS 1.1 has been deprecated</a> which should facilitate this answer.
 
-'''Non-web browser <-> web server setup''' Both <a href="https://www.dfranke.us/posts/2014-10-14-how-poodle-happened.html">POODLE</a> (SSL 3.0) and <a href="https://cryptologie.net/article/413/beast-an-explanation-of-the-cbc-attack-on-tls/">BEAST (TLS 1.0)</a> are attacks that usually imply a browser-based client. This is because the attack has several requirements:
+'''Non-web browser <-> web server setup'''. Both <a href="https://www.dfranke.us/posts/2014-10-14-how-poodle-happened.html">POODLE</a> (SSL 3.0) and <a href="https://cryptologie.net/article/413/beast-an-explanation-of-the-cbc-attack-on-tls/">BEAST (TLS 1.0)</a> are attacks that usually imply a browser-based client. This is because the attack has several requirements:
 
 # the attacker needs a way to '''execute malicious code on the client-side''' in order to emite specific SSL/TLS packets (this is usually done by serving malicious javascript to the client)
 # each client's encrypted '''packet content is in part known''' (usually true for browsers since we know what HTTP requests look like)
@@ -72,17 +72,45 @@ For this reason, '''most of the non-browser-webserver scenarios might not be vul
 === How to support several versions of TLS? ===
 
 The first problem in supporting several versions of TLS is in the certificates presented by the server (and possibly the client). If they are the same accross different versions of TLS, we are doing what is effectively called "key re-use". The next question "Can I re-use a server's private key?" approaches the problems with that.
-In addition, clients will often "fallback" to older versions if they cannot connect to more recent versions. This is all done in good faith but can in some cases be induced by malicious man-in-the-middle attackers. This is what we call "downgrade attacks". Fortunately, we have mitigations against these which need to be implemented on both side of the protocol.
+
+In addition, clients will often "fallback" to older versions if they cannot connect to more recent versions. This is all done in good faith but can in some cases be induced by malicious man-in-the-middle attackers. This is what we call '''downgrade attacks'''. Fortunately, we have mitigations against these which need to be implemented on both side of the protocol.
+
 On the client-side of things, a fake <a href="">tls_fallback_scsv</a> cipher suite can be sent after doing a fallback to signal to the server what happened. The server can then check if both endpoints indeed support a more recent version of TLS than is being negotiated.
+
 On the server-side of things, TLS 1.3-enabled servers who support lower TLS versions must include a hint that they support TLS 1.3 <a href="https://tools.ietf.org/html/rfc8446#section-4.1.3">in their random value</a>.
 
 Note that these mitigations are "best-effort", if the other side does not implement them they will be ignored.
 
 === Can I re-use a server's private key? ===
 
-Has research has shown [<a href="https://crypto.stanford.edu/RealWorldCrypto/slides/kenny.pdf">Key Reuse: Theory and Practice, <a href="https://drownattack.com/">DROWN</a>]. Key re-use accross applications and protocols can lead to severe vulnerabilities. For this reason, it is advised to use a server's private key only for the purpose it was designed for.
+Has research has shown [<a href="https://crypto.stanford.edu/RealWorldCrypto/slides/kenny.pdf">Key Reuse: Theory and Practice</a>, <a href="https://drownattack.com/">DROWN</a>]. Key re-use accross applications and protocols can lead to severe vulnerabilities. For this reason, it is advised to use a server's private key only for the purpose it was designed for.
 
-=== What Cipher Suites are secure? ===
+=== How to read a Ciphersuite? ===
+
+A Cipher suite is just a series of algorithms used in by the TLS connection. As different algorithms can be supported by a server, a client will often advertise a list which the server can choose from. There exist four important algorithms used by TLS that are negotiable:
+
+* a key exchange algorithm
+* a cipher for authenticated encryption
+* a signature algorithm
+* a hash function
+
+Dedepending on the version of TLS in used, each of these might or might not be included in the cipher suite (if they are not, they will be included in some other field). For example this is a <a href="https://tools.ietf.org/html/draft-ietf-tls-tls13-28#appendix-B.4">TLS 1.3 cipher suite</a>:
+
+<pre><code>TLS_AES_128_GCM_SHA256</code></pre>
+
+While this is a <a href="https://tools.ietf.org/html/rfc5246#appendix-A.5">TLS 1.2 cipher suite</a>:
+
+<pre><code>TLS_RSA_WITH_AES_128_CBC_SHA256</code></pre>
+
+While this is a <a href="https://tools.ietf.org/html/rfc4346#appendix-A.5">TLS 1.1 cipher suite</a>:
+
+<pre><code>TLS_DHE_RSA_WITH_AES_128_CBC_SHA</code></pre>
+
+As you can see, these can be pretty cryptic. Note that OpenSSL has renamed all ciphersuites which makes the task of understanding them even more difficult. Fortunately the OWASP has a <a href="https://www.owasp.org/index.php/TLS_Cipher_String_Cheat_Sheet=Table_of_the_ciphers_.28and_their_priority_from_high_.281.29_to_low_.28e.g._19.29.29">translation table</a>.
+
+=== What Cipher Suites are not secure? ===
+
+blacklist is impossible... whitelist is better
 
 A perfect whitelist of cipher suites would include combinations of the following algorithms:
 
@@ -93,9 +121,6 @@ A perfect whitelist of cipher suites would include combinations of the following
 
 For example the following cipher suite would be a good candidate <code>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</code>.
 
-=== How to read a Ciphersuite? ===
-
-Note that OpenSSL is stupid and has renamed all the ciphersuites. Fortunately the OWASP has a <a href="https://www.owasp.org/index.php/TLS_Cipher_String_Cheat_Sheet=Table_of_the_ciphers_.28and_their_priority_from_high_.281.29_to_low_.28e.g._19.29.29">translation table</a>.
 
 Nonetheless, this doesn't mean that other algorithms are not secure.
 
@@ -122,6 +147,8 @@ Note that sometimes, you want to support older clients that do not have better o
 
 <blockquote> Similarly, GFEs will prefer RC4 over AES-CBC only for low protocol versions (SSLv3/TLSv1) because negotiating these versions with AES-CBC would leave the clients vulnerable to POODLE. </blockquote>
 # https://sites.google.com/site/bughunteruniversity/nonvuln/commonly-reported-ssl-tls-vulnerabilities
+
+TLS_NULL_WITH_NULL_NULL is definitely not secure
 
 === Is renog a problem in TLS? ===
 
