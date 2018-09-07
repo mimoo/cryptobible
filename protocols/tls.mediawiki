@@ -6,7 +6,7 @@ While TLS is usually used between browsers and webservers, there are no limitati
 
 Note that TLS is sometimes seen deeply integrated with another kind of protocol. For example the QUIC protocol (sometimes refered to as TCP 2.0) has encryption by default thanks to TLS.
 
-=== What Versions should be supported? ===
+=== What Versions Should Be Supported? ===
 
 The design of SSL/TLS has had many broken versions in the past. For this reason, nobody uses SSL anymore (which ended at version 3) and more secure versions of TLS (1.2 and 1.3) are pushed.
 
@@ -49,7 +49,7 @@ The design of SSL/TLS has had many broken versions in the past. For this reason,
 
 '''Ideally, only TLS 1.1, 1.2 and 1.3 should be supported'''. Hyper ideally, only the last version (TLS 1.3) should be supported.
 
-=== Can TLS 1.0 and 1.1 still be supported? ===
+=== Can TLS 1.0 And 1.1 Still Be Supported? ===
 
 Unfortunately, many clients continue to use older versions and it is sometimes tricky to continue to support them. This leads to the question, can we support older version securely?
 
@@ -65,11 +65,11 @@ For this reason, '''most of the non-browser-webserver scenarios might not be vul
 
 '''Web browser <-> web server setup'''. While SSL 3.0 is pretty much broken and can even endanger secure versions of TLS (<a href="https://drownattack.com/">DROWN</a>), we know ways to <a href="https://cryptologie.net/article/413/beast-an-explanation-of-the-cbc-attack-on-tls/">mitigate the BEAST attack on TLS 1.0</a>. These mitigations are implemented in all modern browsers which let us conclude that <a href="https://blog.qualys.com/ssllabs/2013/09/10/is-beast-still-a-threat">BEAST is no longer a threat</a>. With that in mind, '''supporting TLS 1.0 is possible, but not recommended'''.
 
-=== Can SSL 3.0 still be supported? ===
+=== Can SSL 3.0 Still Be Supported? ===
 
 While <a href="https://sites.google.com/site/bughunteruniversity/nonvuln/commonly-reported-ssl-tls-vulnerabilities">some companies</a> still support SSL 3.0, it is a difficult endeavor as the protocol is completely broken by the POODLE attack and the numerous attacks on RC4. You should <a href="https://disablessl3.com/">not support it</a> unless you have extremely good reasons and you know what you're doing.
 
-=== How to support several versions of TLS? ===
+=== How To Support Several Versions Of TLS? ===
 
 The first problem in supporting several versions of TLS is in the certificates presented by the server (and possibly the client). If they are the same accross different versions of TLS, we are doing what is effectively called "key re-use". The next question "Can I re-use a server's private key?" approaches the problems with that.
 
@@ -81,11 +81,11 @@ On the server-side of things, TLS 1.3-enabled servers who support lower TLS vers
 
 Note that these mitigations are "best-effort", if the other side does not implement them they will be ignored.
 
-=== Can I re-use a server's private key? ===
+=== Can I Re-use A Server's Private Key? ===
 
 Has research has shown [<a href="https://crypto.stanford.edu/RealWorldCrypto/slides/kenny.pdf">Key Reuse: Theory and Practice</a>, <a href="https://drownattack.com/">DROWN</a>]. Key re-use accross applications and protocols can lead to severe vulnerabilities. For this reason, it is advised to use a server's private key only for the purpose it was designed for.
 
-=== How to read a Ciphersuite? ===
+=== How To Read A Ciphersuite? ===
 
 A Cipher suite is just a series of algorithms used in by the TLS connection. As different algorithms can be supported by a server, a client will often advertise a list which the server can choose from. There exist four important algorithms used by TLS that are negotiable:
 
@@ -108,7 +108,7 @@ While this is a <a href="https://tools.ietf.org/html/rfc4346#appendix-A.5">TLS 1
 
 As you can see, these can be pretty cryptic. Note that OpenSSL has renamed all ciphersuites which makes the task of understanding them even more difficult. Fortunately the OWASP has a <a href="https://www.owasp.org/index.php/TLS_Cipher_String_Cheat_Sheet=Table_of_the_ciphers_.28and_their_priority_from_high_.281.29_to_low_.28e.g._19.29.29">translation table</a>.
 
-=== What Algorithms and Cipher Suites are not secure? ===
+=== What Algorithms And Cipher Suites Are Not Secure? ===
 
 There are so many combination of algorithms and ciphersuites available that it is impossible to write up a blacklist. Instead, we will happily do with a whitelist. A perfect combination of algorithms would be a bouquet from this list:
 
@@ -133,79 +133,70 @@ Nonetheless, this doesn't mean that other algorithms are not secure. Here is a l
 
 TLS can support many more ciphers through various extensions. But it would be too long for us to list why each of them should not be included. Wikipedia has a <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security=Cipher">useful table</a> that shows what ciphers are deemed secure or not.
 
-=== Is Renegotiation a Problem in TLS? ===
+=== Is Renegotiation A Problem In TLS? ===
 
 <a href="http://www.educatedguesswork.org/2009/11/understanding_the_tls_renegoti.html">Yes</a> and <a href="http://www.educatedguesswork.org/2011/10/ssltls_and_computational_dos.html">no</a>. But this is enough to make us think that renegotiation is bringing more issues than it solves and should thus be disabled.
 
-=== Is Compression a Problem in TLS? ===
+=== Is Compression A Problem In TLS? ===
 
 TLS Compression and compression at the application both should be disabled because of the <a href="https://www.helpnetsecurity.com/2016/08/11/compression-oracle-attacks-https/">numerous compression attacks</a>.
 
-=== What is DER, .pem, ASN.1, x509, base64? ===
+=== What is DER, .PEM, ASN.1, x.509, BASE64? ===
 
 <a href="https://www.cryptologie.net/article/260/asn1-vs-der-vs-pem-vs-x509-vs-pkcs7-vs/">Read this</a>.
 
-=== Is 0-RTT OK in TLS 1.3? ===
+=== Is 0-RTT (early Data) Secure In TLS 1.3? ===
 
-TLS 1.3 introduces a new concept called "0-RTT" or "early data" which allows clients to send encrypted requests to servers during their very first flight of messages. Because of the design of this feature, these messages are not forward-secure and are '''replayable'''. This is a problem if such requests can mutate the state of the server.
+TLS 1.3 introduces a new concept called "0-RTT" or "early data" which allows clients to send encrypted requests to servers during their very first flight of messages. Because of the design of this feature, these messages are not forward-secure and are '''replayable'''. This is a problem if such requests can mutate the state of the server (what we sometimes call "non-idempotent" requests).
 
-TLS 1.3 client that enable this feature are supposed to maintain a whitelist of requests that are safe to send as early data.
+This feature has been pushed by big players who want to get faster sessions, but their downsides have been <a href="https://github.com/tlswg/tls13-spec/issues/1001">criticized heavily</a> which leads us to '''NOT''' recommend activating this feature in TLS 1.3.
 
-TLS 1.3 servers that enable this feature should also maintain such a whitelist ('''REALLY?''')
+If this feature MUST be used, know that TLS 1.3 clients should maintain a whitelist of requests that are safe to send as early data and TLS 1.3 servers should also maintain such a whitelist. 
 
-'''Ideally, 0-RTT should not be enabled on either side of the connection'''.
+=== How To Assess x.509 Certificates? ===
 
-=== How to assess certificates? ===
+While nothing constrain TLS endpoints to use certificates, implementations are generally biased towards its use. Both servers and clients can use them to allow the other side of the connection to authenticate them. These certificates contain public keys that will get used for the handshake's key exchange. These public keys should be supporting secure key exchange algorithms (see <a href="#what-algorithms-and-cipher-suites-are-not-secure">What Algorithms And Cipher Suites Are Not Secure?</a>) and be of the <a href="https://www.keylength.com/">correct size</a>. The same should be verified on the entire chain of certificates used by both endpoints if a public key infrastructure is in use.
 
-# a server is usually authenticated via its certificate
-# the certificate contains a public key (see keylength.com)
-# the certificate also contains a signature from an authority that you trust
-# that's PKI
-# otherwise you need to trust the certificate (certificate pinning)
-# these certificates are usually stores as <code>.pem</code> files
-# <a href="">x509 vs asn.1 vs DER vs pem</a>
-# note that x509 parsers are often riddled with bugs (parsing is hard)
-    - so might want to look in there for wrong parsing, but it's hard because you need to understand how to parse DER
-    - fuzz! you can use frankencerts
-    - boringSSL and others might have more corpus
-# you can easily analyze a certificate with:
+To read a certificate in PEM or DER format you can use the OpenSSL command-line interface:
 
-<pre><code>
+<pre>
 openssl x509 -in yourcert.pem -noout -text
-</code></pre>
+</pre>
 
-# https://github.com/zmap/zlint ?
-# https://github.com/briansmith/webpki ?
-# https://github.com/square/certstrap
+But other tools like <a href="https://github.com/square/certstrap">certstrap</a> exist.
 
-<a href="">check more openssl handies here</a>
+To figure out if a certificate is correctly written, check the <a href="https://www.cryptologie.net/article/374/common-x509-certificate-validationcreation-pitfalls">common x.509 certificate validation/creation pitfalls</a> and use tools like <a href="https://github.com/zmap/zlint">zlint</a> and <a href="https://github.com/briansmith/webpki">webPKI</a>.
 
-# how to store a certificate?
-# unicornator helps you looking at certificates as well
-# <a href="https://www.cryptologie.net/article/374/common-x509-certificate-validationcreation-pitfalls"></a>
+To manually modify a certificate you need to understand the <a href="http://luca.ntop.org/Teaching/Appunti/asn1.html">DER encoding</a>.
 
-=== How to test a TLS server as a blackbox? ===
 
-The easy way to test a server is to scan it via open source tools like:
+=== How To Test A TLS Server As A Blackbox? ===
 
-# <a href="https://testssl.sh/">testssl</a>
+The easy way to test a server is to scan it. Many tools exist:
+
 # <a href="https://github.com/nabla-c0d3/sslyze">sslyze</a>
-# https://github.com/mozilla/tls-observatory
-# https://github.com/mozilla/cipherscan
-# https://www.bolet.org/TestSSLServer/
-# https://github.com/tomato42/tlsfuzzer
+# <a href="https://testssl.sh/">testssl</a>
+# <a href="https://github.com/mozilla/tls-observatory">TLS-observatory</a>
+# <a href="https://github.com/mozilla/cipherscan">cipherscan</a>
+# <a href="https://www.bolet.org/TestSSLServer/">TestSSLServer/</a>
+# <a href="https://github.com/tomato42/tlsfuzzer">tlsfuzzer</a>
 
-Unfortunately outputs obtained from these tools are often not clear and are sometimes false positives. 
+Unfortunately outputs obtained from these tools are not always clear and can also be false positives. 
 
-Online scanners like <a href="https://www.ssllabs.com/ssltest/">SSLlabs</a> exist.
+Online scanners like <a href="https://www.ssllabs.com/ssltest/">SSLlabs</a> also exist.
 
-The OpenSSL CLI can be used as a client:
+The OpenSSL CLI can be used as a quick-and-dirty client:
 
-<pre><code>$ openssl s_client -connect google.com:443</code></pre>
+<pre>
+$ openssl s_client -connect google.com:443
+</pre>
 
 Socat can also be handful:
 
-<pre><code>$ socat stdio openssl-connect:google.com:443,cert=$HOME/etc/client.pem,cafile=$HOME/etc/server.crt</code></pre>
+<pre>
+$ socat stdio openssl-connect:google.com:443,cert=$HOME/etc/client.pem,cafile=$HOME/etc/server.crt
+</pre>
+
 
 === how to test a TLS client as a blackbox? ===
 
@@ -247,6 +238,13 @@ For language-specific configurations, refer to:
 # lucky thirteen in TLS 1. -> constant time CBC MAC verification
 # RSA bleichenbacher in TLS 1. and TLS 1.2 -> constant time everything
 # downgrade attacks
+
+
+# note that x509 parsers are often riddled with bugs (parsing is hard)
+	- https://crypto.stanford.edu/~dabo/pubs/abstracts/ssl-client-bugs.html
+    - so might want to look in there for wrong parsing, but it's hard because you need to understand how to parse DER
+    - fuzz! you can use frankencerts
+    - boringSSL and others might have more corpus
 
 === What libraries should I use? ===
 
