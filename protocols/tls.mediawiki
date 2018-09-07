@@ -67,7 +67,7 @@ For this reason, '''most of the non-browser-webserver scenarios might not be vul
 
 === Can SSL 3.0 still be supported? ===
 
-<a href="https://disablessl3.com/">No. It is completely broken by the POODLE attack and the numerous attacks on RC4.</a>
+While <a href="https://sites.google.com/site/bughunteruniversity/nonvuln/commonly-reported-ssl-tls-vulnerabilities">some companies</a> still support SSL 3.0, it is a difficult endeavor as the protocol is completely broken by the POODLE attack and the numerous attacks on RC4. You should <a href="https://disablessl3.com/">not support it</a> unless you have extremely good reasons and you know what you're doing.
 
 === How to support several versions of TLS? ===
 
@@ -96,67 +96,54 @@ A Cipher suite is just a series of algorithms used in by the TLS connection. As 
 
 Dedepending on the version of TLS in used, each of these might or might not be included in the cipher suite (if they are not, they will be included in some other field). For example this is a <a href="https://tools.ietf.org/html/draft-ietf-tls-tls13-28#appendix-B.4">TLS 1.3 cipher suite</a>:
 
-<pre><code>TLS_AES_128_GCM_SHA256</code></pre>
+<pre>TLS_AES_128_GCM_SHA256</pre>
 
 While this is a <a href="https://tools.ietf.org/html/rfc5246#appendix-A.5">TLS 1.2 cipher suite</a>:
 
-<pre><code>TLS_RSA_WITH_AES_128_CBC_SHA256</code></pre>
+<pre>TLS_RSA_WITH_AES_128_CBC_SHA256</pre>
 
 While this is a <a href="https://tools.ietf.org/html/rfc4346#appendix-A.5">TLS 1.1 cipher suite</a>:
 
-<pre><code>TLS_DHE_RSA_WITH_AES_128_CBC_SHA</code></pre>
+<pre>TLS_DHE_RSA_WITH_AES_128_CBC_SHA</pre>
 
 As you can see, these can be pretty cryptic. Note that OpenSSL has renamed all ciphersuites which makes the task of understanding them even more difficult. Fortunately the OWASP has a <a href="https://www.owasp.org/index.php/TLS_Cipher_String_Cheat_Sheet=Table_of_the_ciphers_.28and_their_priority_from_high_.281.29_to_low_.28e.g._19.29.29">translation table</a>.
 
-=== What Cipher Suites are not secure? ===
+=== What Algorithms and Cipher Suites are not secure? ===
 
-blacklist is impossible... whitelist is better
+There are so many combination of algorithms and ciphersuites available that it is impossible to write up a blacklist. Instead, we will happily do with a whitelist. A perfect combination of algorithms would be a bouquet from this list:
 
-A perfect whitelist of cipher suites would include combinations of the following algorithms:
+# '''Key Exchange'''. X448, X25519, ECDHE (with secp256r1, secp384r1 or secp521r1)
+# '''Signature'''. EdDSA (with Curve448 or Curve25519), ECDSA (with secp256r1, secp384r1 or secp521r1), RSA-PSS with SHA-256, SHA-384 or SHA-512) and RSA-PKCS1 (with SHA-256, SHA-385 or SHA-512).
+# '''Authenticated Encryption'''. AES-128-GCM, AES-256-GCM, Chacha20-Poly1305
+# '''Hash'''. SHA-256, SHA-384 or SHA-521
 
-# key exchange: ECDH
-# signature: RSA or ECDSA
-# authenticated encryption: AES-128-GCM, AES-256-GCM or Chacha20-Poly1305
-# hash: SHA-256, SHA-384 or SHA-521
+Nonetheless, this doesn't mean that other algorithms are not secure. Here is a list of other acceptable algorithms:
 
-For example the following cipher suite would be a good candidate <code>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</code>.
+'''RSA key exchange'''. This key exchange has had a lot of issues with the <a href="http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf">Bleichenbacher attack on RSA encryption with PKCS#1 v1.5</a>. Implementations are expected not to leak any information about the correctness of the decryption, but a lot of them still fail this test (the bleichenbacher attack has been re-discovered <a href="https://robotattack.org/">again and again</a> over the years). Hence this mode should be avoided solely because attacks against it are extremely practical and hard to mitigate against. In addition, this key exchange does not provide forward secrecy and is one of the reason why it has been removed from TLS 1.3.
 
+'''Diffie-Hellman (FFDH)'''. Not to mix with ECDH, the Diffie-Hellman key exchange has had its fair share of issues. The <a href="https://eprint.iacr.org/2016/644">LOGJAM</a> research found out that the real-world usage of the key exchange had a poor security stance while it was also found that the protocol was easy to <a href="https://eprint.iacr.org/2016/644">backdoor</a> and that <a href="http://blog.intothesymmetry.com/2016/10/the-rfc-5114-saga.html">some standards might actually have been</a>. While the protocol can be used correctly by using <a href="https://tools.ietf.org/html/rfc7919">known good groups</a> (default in TLS 1.3) or by <a href="https://github.com/mimoo/test_DHparams">testing the groups</a> supported by a TLS server, protocols and browsers are moving away from it in favor of ECDH and its smaller keys.
 
-Nonetheless, this doesn't mean that other algorithms are not secure.
+'''DSA'''. As for FFDH and ECDH, DSA has seen its key sizes greatly reduced by the invention of ECDSA. Which is why pretty much no-one still use DSA. In addition, <a href="https://blog.cr.yp.to/20151120-batchattacks.html">multi-key attacks</a> are weaker against ECDH as well. This makes DSA not a bad algorithm but a poorly supported one.
 
-'''RSA key exchange''' has had a lot of issues with the Bleichenbacher attack. Implementations are expected not to leak any information about the correctness of the decryption, but most of them still fail this test. Hence this mode should be avoided just because attacks against it are really practical and hard to mitigate correctly. In addition, this key exchange does not provide forward secrecy and is one of the reason why it has been removed from TLS 1.3.
+'''AES-CBC'''. The infamous cipher has unfortunately been wrongly implemented in SSL/TLS from the start, and has led to several practical attacks: POODLE on SSL 3.0, BEAST on TLS 1.0 and Lucky13 on all versions of the protocol. That is to say, there exist client-side mitigations for BEAST (client-side) and the Lucky13 attack should not be possible if the implementation does not leak information about the correctness of the decryption. That being said, implementations have been found to repeatidly make mistakes there (Lucky13 has been re-discovered many times) and thus AES-CBC should be quickly deprecated in favor of authenticated ciphers like AES-GCM or Chacha20-Poly1305.
 
-'''DH key exchange''' has had <a href="https://eprint.iacr.org/2016/644) (LOGJAM) with bad groups in the past. That is to say if the server use secure groups and renew there should be no issues. You can use the [test_DHparams](https://github.com/mimoo/test_DHparams">issues</a> tool to verify if a server's Diffie-Hellman parameters are fine.
+'''AES-CCM'''. Rarely used but sometimes needed, it is plagued by inconvenience rather than insecurity. Although there exist an AES-CCM-8 version which should be avoided.
 
-'''DSA''' ?
+'''3DES''' also called DES-CBC3 or DES-EDE (for Encryption-Decryption-Encryption) has been targeted by the <a href="https://www.cryptologie.net/article/373/tldr-of-the-sweet32-attack-on-the-practical-in-security-of-64-bit-block-ciphers/">Sweet32 research</a> which has helped with its deprecation. Although the attack remains highly impractical, which makes 3DES fine (and still actively used in the banking world) we have better cipher nowadays.
 
-'''AES-CBC''' is wrongly implemented in TLS and has lead to several practical attacks. POODLE on SSL 3, BEAST on TLS 1.0 and padding oracles on all versions. That is to say, there exist client-side mitigations for BEAST (none server-side) and padding oracles on CBC should not be possible if the implementation does not leak information about the correctness of the decryption. That is, implementations have been found to repeatidly make mistakes there (Lucky Thirteen has been re-discovered many times) and thus AES-CBC should be quickly deprecated.
+TLS can support many more ciphers through various extensions. But it would be too long for us to list why each of them should not be included. Wikipedia has a <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security=Cipher">useful table</a> that shows what ciphers are deemed secure or not.
 
-'''3DES''' also called DES-CBC3 or DES-EDE (for Encryption-Decryption-Encryption) was pointed out by the <a href="https://www.cryptologie.net/article/373/tldr-of-the-sweet32-attack-on-the-practical-in-security-of-64-bit-block-ciphers/) attack as insecure (along with other 64-bit ciphers">sweet32</a>. Although the attack remains highly impractical and hence the algorithm can be used but should be scheduled for deprecation.
+=== Is Renegotiation a Problem in TLS? ===
 
-'''RC4''' ?
+<a href="http://www.educatedguesswork.org/2009/11/understanding_the_tls_renegoti.html">Yes</a> and <a href="http://www.educatedguesswork.org/2011/10/ssltls_and_computational_dos.html">no</a>. But this is enough to make us think that renegotiation is bringing more issues than it solves and should thus be disabled.
 
-TLS can support many more ciphers through various extensions. It would be too long for us to list why each of them should not be included. Wikipedia has [a useful table](https://en.wikipedia.org/wiki/Transport_Layer_Security=Cipher
-) that shows what ciphers are deemed secure or not.
+=== Is Compression a Problem in TLS? ===
 
-In addition, Mozilla's <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">SSL config generator](https://mozilla.github.io/server-side-tls/ssl-config-generator/?hsts=no) and [Server-side TLS wiki</a> can be used to guide you through generating sane TLS configurations.
+TLS Compression and compression at the application both should be disabled because of the <a href="https://www.helpnetsecurity.com/2016/08/11/compression-oracle-attacks-https/">numerous compression attacks</a>.
 
-Without a server's source code, the most straight forward way to assess its configuration is to scan it via tools. Check the <a href="">scanning a server</a> section.
+=== What is DER, .pem, ASN.1, x509, base64? ===
 
-Note that sometimes, you want to support older clients that do not have better options than RC4 or DSA or etc... In the end, the server is always the one who chooses and can choose the best option provided by the client. The only danger is having the server offer really bad key exchange mechanisms which would allow a MITM attacker to hide the real list of the client to pretend that the client only support weak ciphers (ciphersuite downgrade?). See LOGJAM and FREAK
-
-<blockquote> Similarly, GFEs will prefer RC4 over AES-CBC only for low protocol versions (SSLv3/TLSv1) because negotiating these versions with AES-CBC would leave the clients vulnerable to POODLE. </blockquote>
-# https://sites.google.com/site/bughunteruniversity/nonvuln/commonly-reported-ssl-tls-vulnerabilities
-
-TLS_NULL_WITH_NULL_NULL is definitely not secure
-
-=== Is renog a problem in TLS? ===
-
-Probably not, see ekr blog post, but disable it nonetheless
-
-=== What is DER, .pem, ASN.1, x509, base64, etc. ? ===
-
-tktktk
+<a href="https://www.cryptologie.net/article/260/asn1-vs-der-vs-pem-vs-x509-vs-pkcs7-vs/">Read this</a>.
 
 === Is 0-RTT OK in TLS 1.3? ===
 
