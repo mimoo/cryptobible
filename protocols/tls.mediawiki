@@ -169,10 +169,13 @@ To figure out if a certificate is correctly written, check the <a href="https://
 
 To manually modify a certificate you need to understand the <a href="http://luca.ntop.org/Teaching/Appunti/asn1.html">DER encoding</a>.
 
+To install certificates on your computer easily, there is <a href="https://github.com/FiloSottile/mkcert">mkcert</a>.
 
 === How To Test A TLS Server As A Blackbox? ===
 
-The easy way to test a server is to scan it. Many tools exist:
+There is no easy way to test a TLS server as a blackbox, and it should be avoided if it can. Because of the complexity of TLS implementations, you should always prefer a whitebox assessment.
+
+That being said, many tools exist to scan and detect easy problems (misconfiguration usually):
 
 # <a href="https://github.com/nabla-c0d3/sslyze">sslyze</a>
 # <a href="https://testssl.sh/">testssl</a>
@@ -181,9 +184,9 @@ The easy way to test a server is to scan it. Many tools exist:
 # <a href="https://www.bolet.org/TestSSLServer/">TestSSLServer/</a>
 # <a href="https://github.com/tomato42/tlsfuzzer">tlsfuzzer</a>
 
-Unfortunately outputs obtained from these tools are not always clear and can also be false positives. 
+Unfortunately outputs obtained from these tools are not always clear and can also be false positives.  Online scanners like <a href="https://www.ssllabs.com/ssltest/">SSLlabs</a> also exist.
 
-Online scanners like <a href="https://www.ssllabs.com/ssltest/">SSLlabs</a> also exist.
+There are stronger tools like <a href="https://github.com/RUB-NDS/TLS-Attacker">TLS Attacker</a> and <a href="https://github.com/robotattackorg/robot-detect">ROBOT detect</a> which will look for kwown cryptographic attacks that are wrongly mitigated by the TLS implementation.
 
 The OpenSSL CLI can be used as a quick-and-dirty client:
 
@@ -198,15 +201,21 @@ $ socat stdio openssl-connect:google.com:443,cert=$HOME/etc/client.pem,cafile=$H
 </pre>
 
 
-=== how to test a TLS client as a blackbox? ===
+=== How To Test A TLS Client As A Blackbox? ===
+
+Tools like <a href="https://github.com/RUB-NDS/TLS-Attacker">TLS Attacker</a> can also be used to test clients against known cryptographic attacks.
 
 To test TLS clients that are meant to accept any valid certificates, one handy website is <a href="https://badssl.com/">badssl.com</a> which is a collection of webservers serving "bad" certificates. Your client should always refuse these.
 
-Some TLS clients are meant to only accept a set of certificates, for example a mobile application connecting to https://api.mywebsite.com should not accept a server broadcasting valid certificate for https://www.evil.com. To test these you can try to man-the-middle the connection via tools like <a href="https://mitmproxy.org/">mitmproxy</a>.
+Some TLS clients are meant to only accept a fixed set of certificates, for example a mobile application connecting to https://api.mywebsite.com should not accept a server broadcasting valid certificate for https://www.evil.com. To test these you can try to man-the-middle the connection via tools like <a href="https://mitmproxy.org/">mitmproxy</a>.
 
 Furthermore, wireshark can be used to analyze if clients correctly split AES-CBC payloads to mitigate against the BEAST attack.
 
 <img src="https://i.imgur.com/Tyrtb20.png">
+
+Downgrade prevention can be tested as discussed in <a href="#how-to-support-several-versions-of-tls">How To Support Several Versions Of TLS?</a>.
+
+Unfortunately the list is infinite and it is hard to figure out what to test. As with TLS servers, there are no secrets: TLS clients tests should be code-assisted.
 
 
 === How to configure a TLS server correctly? ===
@@ -217,13 +226,6 @@ For language-specific configurations, refer to:
 
 # <a href="https://github.com/gtank/cryptopasta/blob/master/tls_test.go">Go</a>
 # ...
-
-=== Tools ===
-
-# https://github.com/RUB-NDS/TLS-Attacker  
-# https://github.com/hannob/selftls
-# TKTK
-# https://github.com/FiloSottile/mkcert ?
 
 === code review of a TLS implementation ===
 
@@ -245,6 +247,10 @@ For language-specific configurations, refer to:
     - so might want to look in there for wrong parsing, but it's hard because you need to understand how to parse DER
     - fuzz! you can use frankencerts
     - boringSSL and others might have more corpus
+
+fuzzing tls: https://github.com/hannob/selftls
+
+crypto: whycheproof
 
 === What libraries should I use? ===
 
