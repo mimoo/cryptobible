@@ -2,12 +2,14 @@
 
 How to audit cryptography.
 
+This is quite empty, and the categories are meaningless, it's a big project, it will take time, please be patient.
+
 ## Protocols
 
 * [Encrypting communications (SSL/TLS, IPSEC, SSH)](protocols/tls.mediawiki)
-* Password-Augmented Key Exchange (PAKE, SAS)
+* Password-Authenticated Key Exchange (PAKE, SAS)
 * Token authentication (OAUTH, SSO)
-* Symmetric authentication HOTP/TOTP (one-time passwords)
+* Symmetric authentication (HOTP, TOTP)
 * End-to-end encryption, Messaging (Signal, PGP)
 * Serialization (JWS, SAML)
               
@@ -36,8 +38,8 @@ How to audit cryptography.
 ## Architecture
 
 * Identification (IAM, SAS, PKI)
-* Encrypting a Database (TDE)
-* Storing secrets
+* Encrypting a Database (Tokenization, TDE, SSE)
+* Storing secrets 
 * Disk Encryption
               
 ## Guides
