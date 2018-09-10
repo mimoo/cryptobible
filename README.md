@@ -37,11 +37,11 @@ This is quite empty, and the categories are meaningless, it's a big project, it 
               
 ## Architecture
 
-* Identification (IAM, SAS, PKI)
+* Identification (IAM, SAS, PKI, Kerberos)
 * Encrypting a Database (Tokenization, TDE, SSE)
 * Storing secrets 
 * Disk Encryption
-              
+
 ## Guides
 
 * Cryptographic Libraries

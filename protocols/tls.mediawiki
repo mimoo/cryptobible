@@ -8,7 +8,7 @@ Note that TLS is sometimes seen deeply integrated with another kind of protocol.
 
 === What Versions SSL/TLS Are Secure? ===
 
-The design of SSL/TLS has had many broken versions in the past. For this reason, nobody uses SSL anymore (which ended at version 3) and more secure versions of TLS (1.2 and 1.3) are pushed.
+The design of SSL/TLS has had many broken versions in the past. For this reason, practically nobody uses SSL anymore and more secure versions of TLS (1.2 and 1.3) are <a href="https://tools.ietf.org/html/draft-moriarty-tls-oldversions-diediedie-01#section-10">pushed for adoption</a>.
 
 <table>
 <thead>
