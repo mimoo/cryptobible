@@ -4,8 +4,8 @@ RSA is both a signature and an asymmetric encryption scheme. It is important to 
 
 There are many encryption schemes that have been standardized, unfortunately not all of them are that great and the great ones are often not implemented by libraries.
 
-# '''PKCS#1 v1.5''' was discovered to be broken in 1998. You should avoid this algorithm at all cost unless you have very good reasons and have implemented strong mitigations. See our section <a href="#is-rsa-pkcs-1-v15-secure">Is RSA PKCS#1 v1.5 secure?</a> for more information.
-# PKCS#1 v2.0 introduced '''OAEP''' which has an incorrect proof of security as well as issues close to PKCS#1 v1.5 but that are easier to mitigate.
+# <a href="https://tools.ietf.org/html/rfc2313">The PKCS#1 v1.5 padding</a> was discovered to be broken in 1998. You should avoid this algorithm at all cost unless you have very good reasons and have implemented strong mitigations. See our section <a href="#is-rsa-pkcs-1-v15-secure">Is RSA PKCS#1 v1.5 secure?</a> for more information.
+# <a href="https://tools.ietf.org/html/rfc8017#section-7.2">OAEP</a> was introduced in PKCS#1 v2 and has an incorrect proof of security as well as issues close to PKCS#1 v1.5 but that are easier to mitigate.
 # <a href="https://eprint.iacr.org/2000/060">OAEP+</a> corrects the proof of security of OAEP. Unfortunately did not get standardized.
 # <a href="https://eprint.iacr.org/2002/034">OAEP++</a> is another attempt at correcting the proof of security of OAEP. Unfortunately did not get standardized.
 # <a href="https://tools.ietf.org/html/rfc5990">RSA-KEM</a> (<a href="https://eprint.iacr.org/2001/112.pdf">from Shoup's work</a>) is the simplest way to encrypt with RSA, it also benefits from a tight security proof. Unfortunately it is not always implemented by libraries.
@@ -47,12 +47,10 @@ Probably not, depending on how you use RSA there might exist more attacks. See <
 RSA has had issues in the past:
 
 # <a href="https://factorable.net/">Mining Your Ps and Qs: Detection of Widespread Weak Keys in Network Devices</a>
+# <a href="https://crocs.fi.muni.cz/public/papers/rsa_ccs17">ROCA (CCS 2017)</a>
 
 TKTK
 
 == Side Channel on RSA, a problem? ==
 
-not really, unless your threat model involve attackers being able to physically observe or tamper with your device OR you are running adversarial code on the same computer. TKTK
-
-
-
+not really, unless your threat model involve attackers being able to physically observe or tamper with your device OR you are running adversarial code on the same computer. TKTK (fault attacks (rowhammer), timing attacks, etc.)
