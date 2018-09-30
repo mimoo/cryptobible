@@ -44,7 +44,7 @@ Probably not, depending on how you use RSA there might exist more attacks. See <
 
 == Are there any known issues with RSA Key generation? ==
 
-RSA's key generation requires good randomness and good algorithms to generate prime numbers. Both these requirements have been butchered in the past:
+RSA's key generation requires good '''randomness''' and good algorithms to generate '''prime numbers'''. Both these requirements have been butchered in the past:
 
 # <a href="https://factorable.net/">Mining Your Ps and Qs: Detection of Widespread Weak Keys in Network Devices</a>
 # <a href="https://crocs.fi.muni.cz/public/papers/rsa_ccs17">ROCA (CCS 2017)</a>

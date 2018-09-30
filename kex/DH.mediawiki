@@ -1,0 +1,18 @@
+Diffie-Hellman is the first ever public-key crypto algorithm. It acts on finite fields ('''FFDH''') but has also been augmented to work in elliptic curves ('''ECDH'''). While the two algorithms are very similar, they are also subject to different types of attacks. In this page, we refer to FFDH only. See the <a href="ECDH.mediawiki">ECDH</a> page for the elliptic curve variant. 
+
+== What parameters are secure? ==
+
+Many implementations of Diffie-Hellman will often come with pre-generated parameters. For example <a href="https://tools.ietf.org/html/rfc8446#section-4.2.7">TLS 1.3 specifies exactly what DH groups can be negotiated</a>. While these groups taken directly from <a href="https://tools.ietf.org/html/rfc7919">RFC 7919</a> are secure, this is not always the case and the slightest change can introduce issues. For example:
+
+# <a href="https://eprint.iacr.org/2016/644">How to Backdoor Diffie-Hellman</a> tells the tale of the Socat tool which was updated with a suspicious and non-secure DH modulus.
+# <a href="http://blog.intothesymmetry.com/2016/10/the-rfc-5114-saga.html">RFC 5114</a> specifying DH groups was found to be backdoored with broken groups.
+
+For these reasons, it is important to test the validity of the public parameters used. <a href="https://github.com/mimoo/test_DHparams">Tools exist for this</a>.
+
+== What keysize should be used? ==
+
+First, when we talk about keysize what we're talking about is the bit-size of the public '''modulus'''.
+
+As with every keysize concerns, www.keylength.com is often the answer (spoiler alert: 2048-bit).
+
+In addition, the <a href="https://wordpress.rose-hulman.edu/holden/the-mathematics-of-secrets/cryptography-by-the-numbers/">cryptography by the numbers</a> page gives some idea of what academic attacks have been able to do (spoiler alert: a 768-bit modulus has been broken). Although <a href="https://weakdh.org/">academic estimates</a> that state adversary should be able to break 1024-bit modulus.

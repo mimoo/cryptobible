@@ -17,7 +17,7 @@ This is quite empty, and the categories are meaningless, it's a big project, it 
 
 * Symmetric Encryption (AES-GCM, Chacha20-Poly1305)
 * Asymmetric Encryption ([RSA](asymmetric_encryption/RSA.mediawiki), ECEIS, signcryption)
-* Key Exchanges (DH, ECDH, RSA)
+* Key Exchanges ([DH](kex/DH.mediawiki), ECDH, RSA)
 * Signature (DSA, ECDSA, EDDSA)
 * Integrity and Authentication (HMAC)
 * Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)
