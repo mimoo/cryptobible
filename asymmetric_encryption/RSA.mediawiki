@@ -32,6 +32,8 @@ RSA OAEP standardized in PKCS#1 v2.x is deemed "good enough" if you do not have 
 
 == What keysize should be used? ==
 
+First, when we talk about keysize what we're talking about is the bit-size of the RSA public '''modulus'''.
+
 As with every keysize concerns, www.keylength.com is often the answer (spoiler alert: 2048-bit).
 
 In addition, the <a href="https://wordpress.rose-hulman.edu/holden/the-mathematics-of-secrets/cryptography-by-the-numbers/">cryptography by the numbers</a> page gives some idea of what academic attacks have been able to do (spoiler alert: a 768-bit modulus has been broken). Although <a href="https://weakdh.org/">academic estimates</a> that state adversary should be able to break 1024-bit modulus.
@@ -39,3 +41,18 @@ In addition, the <a href="https://wordpress.rose-hulman.edu/holden/the-mathemati
 == Is it safe to use a non-standardized RSA algorithm? ==
 
 Probably not, depending on how you use RSA there might exist more attacks. See <a href="https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf">Twenty Years of Attacks on the RSA Cryptosystem</a>.
+
+== How to securely generate RSA Keys ==
+
+RSA has had issues in the past:
+
+# <a href="https://factorable.net/">Mining Your Ps and Qs: Detection of Widespread Weak Keys in Network Devices</a>
+
+TKTK
+
+== Side Channel on RSA, a problem? ==
+
+not really, unless your threat model involve attackers being able to physically observe or tamper with your device OR you are running adversarial code on the same computer. TKTK
+
+
+
