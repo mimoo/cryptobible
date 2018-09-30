@@ -2,7 +2,7 @@ RSA is both a signature and an asymmetric encryption scheme. It is important to 
 
 == Is RSA PKCS #1 v1.5 secure? ==
 
-'''No'''. <a href="http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf">Bleichenbacher found an attack on PKCS#1 v1.5 in 1998</a> which allows to decrypt the content of any encrypted payload, as long as the server advertises (or leaks) the validity of a ciphertext's PKCS#1 v1.5 padding. In spite of this, most certificates on the internet (and thus most internet protocols) are stil using this old and broken primitive. This has led to difficult work arounds and mitigations that have been found not to work over and over:
+'''No'''. <a href="http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf">Bleichenbacher found an attack on PKCS#1 v1.5 in 1998</a> which allows to decrypt the content of any encrypted payload, as long as the server advertises (or leaks) the validity of a ciphertext's PKCS#1 v1.5 padding. In spite of this, most certificates on the internet (and thus most internet protocols) are stil using this old and broken primitive. This has led to difficult to implement workarounds and mitigations, that have consequently been found not to work over and over:
 
 # <a href="http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf">Bleichenbacher (CRYPTO 1998)</a> also called the 1 million message attack, BB98, padding oracle attack on PKCS#1 v1.5, etc.
 # <a href="https://eprint.iacr.org/2003/052">Klima et al. (CHES 2003)</a>
@@ -19,9 +19,9 @@ RSA is both a signature and an asymmetric encryption scheme. It is important to 
 
 == What keysize should be used? ==
 
-As with every keysize concerns, www.keylength.com is often the answer.
+As with every keysize concerns, www.keylength.com is often the answer (spoiler alert: 2048-bit).
 
-In addition, the <a href="https://wordpress.rose-hulman.edu/holden/the-mathematics-of-secrets/cryptography-by-the-numbers/">cryptography by the numbers</a> page gives some idea of what academic attacks have been able to do.
+In addition, the <a href="https://wordpress.rose-hulman.edu/holden/the-mathematics-of-secrets/cryptography-by-the-numbers/">cryptography by the numbers</a> page gives some idea of what academic attacks have been able to do (spoiler alert: a 768-bit modulus has been broken). Although <a href="https://weakdh.org/">academic estimates</a> that state adversary should be able to break 1024-bit modulus.
 
 == Is it safe to use a non-standardized RSA algorithm? ==
 
