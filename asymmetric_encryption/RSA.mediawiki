@@ -4,8 +4,8 @@ RSA is both a signature and an asymmetric encryption scheme. It is important to 
 
 There are many encryption schemes that have been standardized, unfortunately not all of them are that great and the great ones are often not implemented by libraries.
 
-# <a href="https://tools.ietf.org/html/rfc2313">The PKCS#1 v1.5 padding</a> was discovered to be broken in 1998. You should avoid this algorithm at all cost unless you have very good reasons and have implemented strong mitigations. See our section <a href="#is-rsa-pkcs-1-v15-secure">Is RSA PKCS#1 v1.5 secure?</a> for more information.
-# <a href="https://tools.ietf.org/html/rfc8017#section-7.2">OAEP</a> was introduced in PKCS#1 v2 and has an incorrect proof of security as well as issues close to PKCS#1 v1.5 but that are easier to mitigate.
+# <a href="https://tools.ietf.org/html/rfc2313">The PKCS#1 v1.5 padding</a> was discovered to be broken in 1998. You should avoid this algorithm at all cost unless you have very good reasons and have implemented strong mitigations. See our section <a href="#is-rsa-pkcs1-v15-secure">Is RSA PKCS#1 v1.5 secure?</a> for more information.
+# <a href="https://tools.ietf.org/html/rfc8017#section-7.2">OAEP</a> was introduced in PKCS#1 v2 and has an incorrect proof of security as well as issues close to PKCS#1 v1.5 but that are easier to mitigate. See our section <a href="#is-rsa-oaep-secure">Is RSA-OAEP secure?</a> for more information.
 # <a href="https://eprint.iacr.org/2000/060">OAEP+</a> corrects the proof of security of OAEP. Unfortunately did not get standardized.
 # <a href="https://eprint.iacr.org/2002/034">OAEP++</a> is another attempt at correcting the proof of security of OAEP. Unfortunately did not get standardized.
 # <a href="https://tools.ietf.org/html/rfc5990">RSA-KEM</a> (<a href="https://eprint.iacr.org/2001/112.pdf">from Shoup's work</a>) is the simplest way to encrypt with RSA, it also benefits from a tight security proof. Unfortunately it is not always implemented by libraries.
