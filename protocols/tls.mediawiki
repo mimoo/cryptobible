@@ -6,7 +6,7 @@ While TLS is usually used between browsers and webservers, there are no limitati
 
 Note that TLS is sometimes seen deeply integrated with another kind of protocol. For example the QUIC protocol (sometimes refered to as TCP 2.0) has encryption by default thanks to TLS.
 
-=== What Versions SSL/TLS Are Secure? ===
+=== What Versions of SSL/TLS Are Secure? ===
 
 The design of SSL/TLS has had many broken versions in the past. For this reason, practically nobody uses SSL anymore and more secure versions of TLS (1.2 and 1.3) are <a href="https://tools.ietf.org/html/draft-moriarty-tls-oldversions-diediedie-01#section-10">pushed for adoption</a>.
 
@@ -69,7 +69,7 @@ For this reason, '''most of the non-browser-webserver scenarios might not be vul
 
 While <a href="https://sites.google.com/site/bughunteruniversity/nonvuln/commonly-reported-ssl-tls-vulnerabilities">some companies</a> still support SSL 3.0, it is a difficult endeavor as the protocol is completely broken by the POODLE attack and the numerous attacks on RC4. You should <a href="https://disablessl3.com/">not support it</a> unless you have extremely good reasons and you know what you're doing.
 
-=== Can I Support Several Versions Of TLS? ===
+=== Is It Possible To Support Several Versions of TLS? ===
 
 The first problem in supporting several versions of TLS is in the certificates presented by the server (and possibly the client). If they are the same accross different versions of TLS, we are doing what is effectively called "key re-use". The next question "Can I re-use a server's private key?" approaches the problems with that.
 
@@ -229,28 +229,16 @@ For language-specific configurations, refer to:
 
 === code review of a TLS implementation ===
 
-# very few people can write a full TLS stack securely
-# do not review a TLS implementation unless you have to, it takes more than this guide to do it
-# using one of the library advised in the next section is better
-# but if you really have to, here are a few pointers:
+Implementing TLS is very hard, and very few people are capable of doing this securely. See the <a href="https://bearssl.org/">numerous articles on BearSSL</a>. It would take an entire book to go through the many pitfalls of implementing such a protocol. It almost always makes more sense to use an already existing library like <a href="">BearSSL</a> or <a href="https://boringssl.googlesource.com/boringssl/">BoringSSL</a>. But if you really have to do it, here are some pointers:
 
-# x509 parsing
-# incorrect state machine
-# vaudenay -> padding errors
-# lucky thirteen in TLS 1. -> constant time CBC MAC verification
-# RSA bleichenbacher in TLS 1. and TLS 1.2 -> constant time everything
-# downgrade attacks
+**x.509 parsing**. Parsing of certificates has been dubbed <a href="https://crypto.stanford.edu/~dabo/pubs/abstracts/ssl-client-bugs.html">the most dangerous code in the world</a>, and this is not for nothing. It is incredibly hard to parse x.509 certificates correctly. There has been many types of vulnerabilities that have been discovered: denial of services due to unordered certificate chains, null terminators in the middle of the common name field that allow for domain name spoofing, incorrect signatures that still get validated, etc. For this reason, it always makes sense to fuzz them. For this, <a href="https://github.com/sumanj/frankencert">frankencerts</a> are useful, and pretty much any serious TLS library has corpus available for fuzzing them.
 
+**Incorrect state machine**. Transitions between different types of state can be tricky, for example you shouldn't accept a ChangeCipherState message after a Finished message. Their consequences can also be devastating. <a href="https://github.com/hannob/selftls">Fuzzing can sometimes yield good results</a>.
 
-# note that x509 parsers are often riddled with bugs (parsing is hard)
-	- https://crypto.stanford.edu/~dabo/pubs/abstracts/ssl-client-bugs.html
-    - so might want to look in there for wrong parsing, but it's hard because you need to understand how to parse DER
-    - fuzz! you can use frankencerts
-    - boringSSL and others might have more corpus
+**Padding errors**. 
 
-fuzzing tls: https://github.com/hannob/selftls
+**Cryptographic Algorithms**. <a href="https://github.com/google/wycheproof">whycheproof</a>
 
-crypto: whycheproof
 
 === What libraries should I use? ===
 

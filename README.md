@@ -16,7 +16,7 @@ This is quite empty, and the categories are meaningless, it's a big project, it 
 ## Primitives
 
 * Symmetric Encryption (AES-GCM, Chacha20-Poly1305)
-* Asymmetric Encryption (RSA, ECEIS, signcryption)
+* Asymmetric Encryption ([RSA](asymmetric_encryption/RSA.mediawiki), ECEIS, signcryption)
 * Key Exchanges (DH, ECDH, RSA)
 * Signature (DSA, ECDSA, EDDSA)
 * Integrity and Authentication (HMAC)
