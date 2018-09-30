@@ -23,3 +23,6 @@ As with every keysize concerns, www.keylength.com is often the answer.
 
 In addition, the <a href="https://wordpress.rose-hulman.edu/holden/the-mathematics-of-secrets/cryptography-by-the-numbers/">cryptography by the numbers</a> page gives some idea of what academic attacks have been able to do.
 
+== Is it safe to use a non-standardized RSA algorithm? ==
+
+Probably not, depending on how you use RSA there might exist more attacks. See <a href="https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf">Twenty Years of Attacks on the RSA Cryptosystem</a>.
