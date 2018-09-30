@@ -42,14 +42,14 @@ In addition, the <a href="https://wordpress.rose-hulman.edu/holden/the-mathemati
 
 Probably not, depending on how you use RSA there might exist more attacks. See <a href="https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf">Twenty Years of Attacks on the RSA Cryptosystem</a>.
 
-== How to securely generate RSA Keys ==
+== Are there any known issues with RSA Key generation? ==
 
-RSA has had issues in the past:
+RSA's key generation requires good randomness and good algorithms to generate prime numbers. Both these requirements have been butchered in the past:
 
 # <a href="https://factorable.net/">Mining Your Ps and Qs: Detection of Widespread Weak Keys in Network Devices</a>
 # <a href="https://crocs.fi.muni.cz/public/papers/rsa_ccs17">ROCA (CCS 2017)</a>
 
-TKTK
+To ensure that a key generation algorithm is safe, it needs to be audited.
 
 == Side Channel on RSA, a problem? ==
 
