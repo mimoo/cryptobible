@@ -22,6 +22,22 @@ AES comes with three types of keys: 128-bit, 192-bit and 256-bit; while most imp
 
 (<a href="https://cyber.biu.ac.il/aes-gcm-siv/">taken from here</a>)
 
+== What size should a nonce/IV be in AES-GCM? ==
+
+96-bit
+
+== How many messages can I encrypt with AES-GCM? ==
+
+If the nonce used by AES-GCM is of standard size 96-bit, 2^96 messages can be encrypted. In practice, this means that you can pretty much encrypt an infinity of messages.
+
+== How large a message can I encrypt with AES-GCM? ==
+
+AES-GCM uses a counter to encrypt blocks of 128 bits, the blocksize of AES. If the nonce used by AES-GCM is of standard size 96-bit, a counter is 32-bit wide. This means that at most '''2^32 * 128 bits ~ 68.7GB''' can be encrypted without repeating the nonce.
+
 == Can an IV be predictible in AES-CBC? ==
 
 '''No'''. An IV cannot be repeated nor be predictible, this is what gave rise to attacks like <a href="https://www.youtube.com/watch?v=-_8-2pDFvmg">the BEAST</a>.
+
+== How many messages can I encrypt with AES-CBC? ==
+
+As no IV should repeat in AES-CBC, it is important to limit the number of messages being encrypted with it. As an IV is 128 bits, sweet32 says that after 2^(128/3) messages it starts becoming dangerous to encrypt more messages. In order to circumvent that change the key at that point.
