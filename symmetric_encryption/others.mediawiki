@@ -1,0 +1,7 @@
+== Is DES Insecure? ==
+
+Yes
+
+== Is 3DES Insecure? ==
+
+No
