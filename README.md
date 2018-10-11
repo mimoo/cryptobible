@@ -1,8 +1,8 @@
 # cryptobible
 
-How to audit cryptography.
+How to audit cryptography. From mis-use of primitives and protocols to actual implementations.
 
-This is quite empty, and the categories are meaningless, it's a big project, it will take time, please be patient.
+This is quite empty for now, come back later.
 
 ## Protocols
 
@@ -20,7 +20,7 @@ This is quite empty, and the categories are meaningless, it's a big project, it 
 * Key Exchanges ([DH](kex/DH.mediawiki), ECDH, RSA)
 * Signature (DSA, ECDSA, EDDSA)
 * Integrity and Authentication (HMAC)
-* Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)
+* [Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)](hashing/hashing.mediawiki)
 * (Password-Based) Key Derivation (HKDF, PBKDF)
               
 ## Mobile

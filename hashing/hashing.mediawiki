@@ -1,0 +1,31 @@
+Hashing is used to quickly transform a variable-length 
+
+== Does hashing provide integrity? ==
+
+'''No'''. To protect the integrity of data, you need to use a Message Authentication Code (MAC) algorithm like <a href="https://tools.ietf.org/html/rfc2104">HMAC (RFC 2104)</a> or <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf">KMAC (NIST SP 800-185)</a>.
+
+== Is SHA-1 safe to be used? ==
+
+Short answer: '''No'''. <a href="https://shattered.io/">It has been broken by Marc Stevens et al</a>.
+
+Long answer: its collision resistance has been broken. Meaning that it can still be used in algorithms like HMAC where collision resistance is not required.
+
+== Is MD5 safe to be used? ==
+
+'''No'''. <a href="https://tools.ietf.org/html/rfc6151">RFC 6151</a> gives more explanations as to why MD5 should not be used. Its collision resistance has been completely broken, and it provides very little second pre-image resistance (2<sup>64</sup>)
+
+== Is SHA-2 safe to be used? ==
+
+Yes, '''if you use it correctly'''. Meaning that you do not use it to hash secrets. Hashing secrets (to protect the integrity of a message for example) can be subject to <a href="https://en.wikipedia.org/wiki/Length_extension_attack">length-extension attacks</a>.
+
+== Can I hash passwords to store them? ==
+
+'''No'''. Hashing functions are quite fast in practice, which allow attackers to test millions of combinations per seconds. To store passwords, '''password hash''' functions are necessary as they are slower and prevent specialized hardware to optimize brute-forcing of hashed passwords. <a href="https://password-hashing.net/">Argon2</a> (winner of the '''password hashing competition''') should be used.
+
+== Can I hash secrets? ==
+
+You should '''not''' hash secrets if you use an old hash algorithm like SHA-2, as it is vulnerable to <a href="https://en.wikipedia.org/wiki/Length_extension_attack">length-extension attacks</a>.
+
+You can hash secrets if you use an algorithm like SHA-3 or BLAKE2.
+
+
