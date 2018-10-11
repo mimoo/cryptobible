@@ -2,7 +2,7 @@ Hashing is used to quickly transform a variable-length
 
 == Does hashing provide integrity? ==
 
-'''No'''. To protect the integrity of data, you need to use a Message Authentication Code (MAC) algorithm like <a href="https://tools.ietf.org/html/rfc2104">HMAC (RFC 2104)</a> or <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf">KMAC (NIST SP 800-185)</a>.
+'''No'''. To protect the integrity of data, you need to use a Message Authentication Code (MAC) algorithm like <a href="https://tools.ietf.org/html/rfc2104">HMAC (RFC 2104)</a> or <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf">KMAC (NIST SP 800-185)</a> or even <a href="https://131002.net/siphash/">SipHash</a> (which is optimized for short messages).
 
 == Is SHA-1 safe to be used? ==
 
@@ -28,4 +28,7 @@ You should '''not''' hash secrets if you use an old hash algorithm like SHA-2, a
 
 You can hash secrets if you use an algorithm like SHA-3 or BLAKE2.
 
+== What hash functions are there for absurd speed requirements? ==
+
+<a href="https://eprint.iacr.org/2016/770">KangarooTwelve</a> and <a href="https://blake2.net/">BLAKE2</a> should be the fastest hash functions out there.
 
