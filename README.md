@@ -2,16 +2,20 @@
 
 How to audit cryptography. From mis-use of primitives and protocols to actual implementations.
 
-This is quite empty for now, come back later.
+**This is quite empty for now, come back later.**
+
+The target of this document is for sysadmins, developers, and security consultants.
 
 ## Protocols
 
 * [Encrypting communications (SSL/TLS, IPSEC, SSH)](protocols/tls.mediawiki)
+* Privacy Protections (DNSSEC, Encrypted SNI, DNSCurve, TOR)
 * Password-Authenticated Key Exchange (PAKE, SAS)
 * Token authentication (OAUTH, SSO)
 * Symmetric authentication (HOTP, TOTP)
 * End-to-end encryption, Messaging (Signal, PGP)
 * Serialization (JWS, SAML)
+* Blockchain (cryptocurrencies, smart contracts, consensus algorithms)
               
 ## Primitives
 
@@ -37,7 +41,9 @@ This is quite empty for now, come back later.
               
 ## Architecture
 
-* Identification (IAM, SAS, PKI, Kerberos)
+* Identification (IAM, Vault)
+* Authorization (Kerberos, SSO, OAUTH)
+* Public Key Infrastructure (Certificate Authorities, Certificate Transparency, Key Transparency)
 * Encrypting a Database (Tokenization, TDE, SSE)
 * Storing secrets 
 * Disk Encryption
