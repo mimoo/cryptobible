@@ -171,6 +171,8 @@ To manually modify a certificate you need to understand the <a href="http://luca
 
 To install certificates on your computer easily, there is <a href="https://github.com/FiloSottile/mkcert">mkcert</a>.
 
+To follow the life of certificates, or to check if a certificate was mis-issued, <a href="https://crt.sh/">crt.sh</a> is useful.
+
 === How To Test A TLS Server As A Blackbox? ===
 
 There is no easy way to test a TLS server as a blackbox, and it should be avoided if it can. Because of the complexity of TLS implementations, you should always prefer a whitebox assessment.
@@ -184,7 +186,10 @@ That being said, many tools exist to scan and detect easy problems (misconfigura
 # <a href="https://www.bolet.org/TestSSLServer/">TestSSLServer/</a>
 # <a href="https://github.com/tomato42/tlsfuzzer">tlsfuzzer</a>
 
-Unfortunately outputs obtained from these tools are not always clear and can also be false positives.  Online scanners like <a href="https://www.ssllabs.com/ssltest/">SSLlabs</a> also exist.
+Unfortunately outputs obtained from these tools are not always clear and can also be false positives.  Online scanners also exist:
+
+# <a href="https://www.ssllabs.com/ssltest/">SSLlabs</a> 
+# <a href="https://tls.imirhil.fr/">imirhil</a>
 
 There are stronger tools like <a href="https://github.com/RUB-NDS/TLS-Attacker">TLS Attacker</a> and <a href="https://github.com/robotattackorg/robot-detect">ROBOT detect</a> which will look for kwown cryptographic attacks that are wrongly mitigated by the TLS implementation.
 
@@ -226,6 +231,10 @@ For language-specific configurations, refer to:
 
 # <a href="https://github.com/gtank/cryptopasta/blob/master/tls_test.go">Go</a>
 # ...
+
+=== How to Analyze a TLS handshake? ===
+
+Wireshark is the best tool to analyze a TLS handshake. There exist <a href="https://tls.ulfheim.net/">good explanations</a> out there to understand what is going on.
 
 === code review of a TLS implementation ===
 

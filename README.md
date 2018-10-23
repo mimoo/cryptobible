@@ -21,9 +21,9 @@ The target of this document is for sysadmins, developers, and security consultan
 
 * Symmetric Encryption (AES-GCM, Chacha20-Poly1305)
 * Asymmetric Encryption ([RSA](asymmetric_encryption/RSA.mediawiki), ECEIS, signcryption)
-* Key Exchanges ([DH](kex/DH.mediawiki), ECDH, RSA)
-* Signature (DSA, ECDSA, EDDSA)
-* Integrity and Authentication (HMAC)
+* Key Exchanges ([DH](kex/DH.mediawiki), ECDH, [RSA](asymmetric_encryption/RSA.mediawiki)
+* Signature (DSA, ECDSA, EdDSA)
+* Integrity and Authentication (HMAC, KMAC)
 * [Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)](hashing/hashing.mediawiki)
 * (Password-Based) Key Derivation (HKDF, PBKDF)
               
@@ -41,12 +41,11 @@ The target of this document is for sysadmins, developers, and security consultan
               
 ## Architecture
 
-* Identification (IAM, Vault)
-* Authorization (Kerberos, SSO, OAUTH)
+* Authentication and Authorization (IAM, Kerberos, SSO, OAUTH)
 * Public Key Infrastructure (Certificate Authorities, Certificate Transparency, Key Transparency)
-* Encrypting a Database (Tokenization, TDE, SSE)
-* Storing secrets 
-* Disk Encryption
+* Encrypting a Database (Tokenization, TDE, SSE, CryptDB, SQLCipher)
+* Storing secrets (Vault, KMS)
+* Disk Encryption (bitlocker, truecrypt, luks, filevault)
 
 ## Guides
 
