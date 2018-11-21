@@ -32,3 +32,6 @@ You can hash secrets if you use an algorithm like SHA-3 or BLAKE2.
 
 <a href="https://eprint.iacr.org/2016/770">KangarooTwelve</a> and <a href="https://blake2.net/">BLAKE2</a> should be the fastest hash functions out there.
 
+== Does the hash function inside of an hash table need to be cryptographically secure? ==
+
+'''It depends'''. If the "key" part of the "key-value"s is user-controlled, then denial-of-service attacks exist where users spam a service with multiple "keys" that will collide under the hash function used in the hash table implementation. For this reason, many languages (like <a href="https://github.com/golang/go/blob/df2bb9817b2184256886d9d9458753b2273c202d/src/runtime/map.go#L122">Golang</a>) and system (like <a href="https://lwn.net/Articles/711167/">the Linux kernel</a>) will randomize their hash function using randomness and cryptographic algorithms like <a href="https://131002.net/siphash/">SipHash</a>. Some others (like Ocaml) requires you to opt-in in order to secure a hash table via additional entropy.
