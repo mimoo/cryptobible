@@ -35,3 +35,14 @@ You can hash secrets if you use an algorithm like SHA-3 or BLAKE2.
 == Does the hash function inside of an hash table need to be cryptographically secure? ==
 
 '''It depends'''. If the "key" part of the "key-value"s is user-controlled, then denial-of-service attacks exist where users spam a service with multiple "keys" that will collide under the hash function used in the hash table implementation. For this reason, many languages (like <a href="https://github.com/golang/go/blob/df2bb9817b2184256886d9d9458753b2273c202d/src/runtime/map.go#L122">Golang</a>) and system (like <a href="https://lwn.net/Articles/711167/">the Linux kernel</a>) will randomize their hash function using randomness and cryptographic algorithms like <a href="https://131002.net/siphash/">SipHash</a>. Some others (like Ocaml) requires you to opt-in in order to secure a hash table via additional entropy.
+
+== Is hashing a structure dangerous? ==
+
+'''It depends'''. If the way you hash a structure is ambiguous, for example because some fields have variable length, then you might be in trouble.
+
+<img src="https://www.cryptologie.net/upload/Screen_Shot_2017-12-14_at_3.20_.22_PM_.png">
+
+In order to prevent different structures to hash to the same value, delimiters must be put in place. This can be done by using the TLV concept (Tag-Length-Value) where each value is preceded by its length and optionally its type. Standards like <a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf">TupleHash</a> exist to do this efficiently.
+
+
+
