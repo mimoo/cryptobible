@@ -1,0 +1,6 @@
+== What is the difference between OTR, OMEMO, Signal, ...? ==
+
+otr: https://otr.cypherpunks.ca/otr-codecon.pdf
+matrix:
+omemo:
+signal:

@@ -1,0 +1,1 @@
+https://vnhacker.blogspot.com/2018/09/invalid-curve-attacks-explained.html

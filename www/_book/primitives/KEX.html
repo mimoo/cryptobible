@@ -1,0 +1,455 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Key Exchanges (DH, ECDH, RSA) · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-wiki-toc/page-toc.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+
+    
+    <link rel="next" href="hashing.html" />
+    
+    
+    <link rel="prev" href="asymmetric_encryption.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="gb-page-wrapper">
+    <header class="gb-page-header">
+        <div class="container">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+
+            <a href=".." class="logo">
+                <img src="../gitbook/images/logo/128.png">
+                <h1>TheCryptoBible</h1>
+            </a>
+
+            
+
+            
+                
+                <a href="hashing.html" class="btn btn-link pull-right hidden-xs">
+                    <i class="octicon octicon-chevron-right"></i>
+                </a>
+                
+                
+                <a href="asymmetric_encryption.html" class="btn btn-link pull-right hidden-xs">
+                    <i class="octicon octicon-chevron-left"></i>
+                </a>
+                
+            
+        
+        </div>
+    </header>
+
+    <div class="gb-page-body">
+        <div class="gb-page-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        
+
+
+
+    
+    <div class="panel panel-default">
+        
+
+        <div class="list-group">
+            
+    
+        
+        <a href="../" class="list-group-item ">
+        
+
+            
+
+            
+
+            Introduction
+
+        
+        </a>
+        
+
+        
+    
+
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            <h3 class="panel-title">Protocols</h3>
+        </div>
+        
+
+        <div class="list-group">
+            
+    
+        
+        <a href="../protocols/tls.html" class="list-group-item ">
+        
+
+            
+
+            
+
+            Encrypting communications (SSL/TLS, IPSEC, SSH)
+
+        
+        </a>
+        
+
+        
+    
+
+        </div>
+    </div>
+    
+    <div class="panel panel-default">
+        
+        <div class="panel-heading">
+            <h3 class="panel-title">Primitives</h3>
+        </div>
+        
+
+        <div class="list-group">
+            
+    
+        
+        <a href="asymmetric_encryption.html" class="list-group-item ">
+        
+
+            
+
+            
+
+            Asymmetric Encryption (RSA, ECEIS, signcryption)
+
+        
+        </a>
+        
+
+        
+    
+        
+        <a href="KEX.html" class="list-group-item active">
+        
+
+            
+
+            
+
+            Key Exchanges (DH, ECDH, RSA)
+
+        
+        </a>
+        
+
+        
+    
+        
+        <a href="hashing.html" class="list-group-item ">
+        
+
+            
+
+            
+
+            Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)
+
+        
+        </a>
+        
+
+        
+    
+
+        </div>
+    </div>
+    
+
+
+
+                    </div>
+                    <div class="col-md-9">
+                        
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                            
+                            <div class="gb-markdown book-page-inner">
+                                <h1 id="key-exchanges">Key Exchanges</h1>
+<h2 id="diffie-hellman">Diffie-Hellman</h2>
+<p>Diffie-Hellman is the first ever public-key crypto algorithm. It acts on
+finite fields (<strong>FFDH</strong>) but has also been augmented to work in
+elliptic curves (<strong>ECDH</strong>). While the two algorithms are very similar,
+they are also subject to different types of attacks. In this page, we
+refer to FFDH only. See the <a href="ECDH.mediawiki">ECDH</a> page for
+the elliptic curve variant.</p>
+<h3 id="what-parameters-and-groups-are-secure">What parameters and groups are secure?</h3>
+<p>Many implementations of Diffie-Hellman will often come with
+pre-generated parameters. For example
+<a href="https://tools.ietf.org/html/rfc8446#section-4.2.7" target="_blank">TLS 1.3
+specifies exactly what DH groups can be negotiated</a>. While these
+groups taken directly from
+<a href="https://tools.ietf.org/html/rfc7919" target="_blank">RFC 7919</a> are secure,
+this is not always the case and the slightest change can introduce
+issues. For example:</p>
+<ul>
+<li><a href="https://eprint.iacr.org/2016/644" target="_blank">How to Backdoor Diffie-Hellman</a> tells the tale of the Socat tool which was updated with a suspicious and non-secure DH modulus.</li>
+<li><a href="http://blog.intothesymmetry.com/2016/10/the-rfc-5114-saga.html" target="_blank">RFC 5114</a> specifying DH groups was found to be backdoored with broken groups.</li>
+</ul>
+<p>For these reasons, it is important to test the validity of the public
+parameters used. <a href="https://github.com/mimoo/test_DHparams" target="_blank">Tools
+exist for this</a>.</p>
+<h3 id="what-keysize-should-be-used">What keysize should be used?</h3>
+<p>First, when we talk about keysize what we&apos;re talking about is the
+bit-size of the public <strong>modulus</strong>.</p>
+<p>As with every keysize concerns, www.keylength.com is often the answer
+(spoiler alert: 2048-bit).</p>
+<p>In addition, the
+<a href="https://wordpress.rose-hulman.edu/holden/the-mathematics-of-secrets/cryptography-by-the-numbers/" target="_blank">cryptography
+by the numbers</a> page gives some idea of what academic attacks have
+been able to do (spoiler alert: a 768-bit modulus has been broken).
+Although <a href="https://weakdh.org/" target="_blank">academic estimates</a> that state
+adversary should be able to break 1024-bit modulus.</p>
+<h2 id="rsa">RSA</h2>
+<p>RSA is both a signature and an asymmetric encryption scheme. It is
+important to know which algorithm and which version of it you are using
+(as not all of them are secure); they are mostly defined in PKCS#1
+documents (<a href="https://tools.ietf.org/html/rfc2313" target="_blank">v1.5</a>,
+<a href="https://tools.ietf.org/html/rfc2437" target="_blank">v2.0</a>,
+<a href="https://tools.ietf.org/html/rfc3447" target="_blank">v2.1</a>,
+<a href="https://tools.ietf.org/html/rfc8017#section-7.2" target="_blank">v2.2</a>).</p>
+<h3 id="what-rsa-encryption-algorithms-are-secure">What RSA encryption algorithms are secure?</h3>
+<p>There are many encryption schemes that have been standardized,
+unfortunately not all of them are that great and the great ones are
+often not implemented by libraries.</p>
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc2313" target="_blank">The PKCS#1 v1.5 padding</a> was discovered to be broken in 1998. You should avoid this algorithm at all cost unless you have very good reasons and have implemented strong mitigations. See our section <a href="#is-rsa-pkcs1-v15-secure">Is RSA PKCS#1 v1.5 secure?</a> for more information.</li>
+<li><a href="https://tools.ietf.org/html/rfc8017#section-7.2" target="_blank">OAEP</a> was introduced in PKCS#1 v2 and has an incorrect proof of security as well as issues close to PKCS#1 v1.5 but that are easier to mitigate. See our section <a href="#is-rsa-oaep-secure">Is RSA-OAEP secure?</a> for more information.</li>
+<li><a href="https://eprint.iacr.org/2000/060" target="_blank">OAEP+</a> corrects the proof of security of OAEP. Unfortunately did not get standardized.</li>
+<li><a href="https://eprint.iacr.org/2002/034" target="_blank">OAEP++</a> is another attempt at correcting the proof of security of OAEP. Unfortunately did not get standardized.</li>
+<li><a href="https://tools.ietf.org/html/rfc5990" target="_blank">RSA-KEM</a> (<a href="https://eprint.iacr.org/2001/112.pdf" target="_blank">from Shoup&apos;s work</a>) is the simplest way to encrypt with RSA, it also benefits from a tight security proof. Unfortunately it is not always implemented by libraries.</li>
+</ul>
+<h3 id="is-rsa-pkcs1-v15-secure">Is RSA PKCS#1 v1.5 secure?</h3>
+<p><strong>No</strong>.
+<a href="http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf" target="_blank">Bleichenbacher
+found an attack on PKCS#1 v1.5 in 1998</a> which allows to decrypt the
+content of any encrypted payload, as long as the server advertises (or
+leaks) the validity of a ciphertext&apos;s PKCS#1 v1.5 padding. In spite of
+this, most certificates on the internet (and thus most internet
+protocols) are stil using this old and broken primitive. This has led to
+difficult to implement workarounds and mitigations, that have
+consequently been found not to work over and over:</p>
+<ul>
+<li><a href="http://archiv.infsec.ethz.ch/education/fs08/secsem/bleichenbacher98.pdf" target="_blank">Bleichenbacher (CRYPTO 1998)</a> also called the 1 million message attack, BB98, padding oracle attack on PKCS#1 v1.5, etc.</li>
+<li><a href="https://eprint.iacr.org/2003/052" target="_blank">Klima et al. (CHES 2003)</a></li>
+<li><a href="https://www.nds.rub.de/media/nds/veroeffentlichungen/2012/12/19/XMLencBleichenbacher.pdf" target="_blank">Blei&#xAD;chen&#xAD;ba&#xAD;cher&#x2019;s At&#xAD;tack Strikes Again: Brea&#xAD;king Pkcs#1 V1.5 In Xml En&#xAD;cryp&#xAD;ti&#xAD;on (ESORICS 2012)</a></li>
+<li><a href="https://eprint.iacr.org/2011/615.pdf" target="_blank">Degabriele et al. (CT-RSA 2012)</a></li>
+<li><a href="https://eprint.iacr.org/2012/417" target="_blank">Bardou et al. (CRYPTO 2012)</a></li>
+<li><a href="https://www.cs.unc.edu/~reiter/papers/2014/CCS1.pdf" target="_blank">Cross-Tenant Side-Channel Attacks in PaaS Clouds (CCS 2014)</a></li>
+<li><a href="https://www.usenix.org/conference/usenixsecurity14/technical-sessions/presentation/meyer" target="_blank">Revisiting SSL/TLS Implementations: New Bleichenbacher Side Channels and Attacks (USENIX 2014)</a></li>
+<li><a href="https://www.nds.rub.de/media/nds/veroeffentlichungen/2015/08/21/Tls13QuicAttacks.pdf" target="_blank">On the Security of TLS 1.3 and QUIC Against Weaknesses in PKCS#1 v1.5 Encryption (CCS 2015)</a></li>
+<li><a href="https://drownattack.com/" target="_blank">DROWN (USENIX 2016)</a></li>
+<li><a href="https://robotattack.org/" target="_blank">Return Of Bleichenbacher&apos;s Oracle Threat (USENIX 2018)</a></li>
+<li><a href="https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-felsch.pdf" target="_blank">The Dangers of Key Reuse: Practical Attacks on IPsec IKE (USENIX 2018)</a></li>
+</ul>
+<h3 id="is-rsa-oaep-secure">Is RSA-OAEP secure?</h3>
+<p>RSA OAEP standardized in PKCS#1 v2.x is deemed &quot;good enough&quot; if you do
+not have access to better standards like
+<a href="https://tools.ietf.org/html/rfc5990" target="_blank">RSA-KEM</a>. Nonetheless,
+implementations of OAEP must mitigate against
+<a href="http://archiv.infsec.ethz.ch/education/fs08/secsem/Manger01.pdf" target="_blank">Manger&apos;s
+attack</a> meaning that they must check in <strong>constant time</strong> the full
+padding of the ciphertext, even if the first null byte is incorrect. For
+example an error returning too early could give indication on the value
+of the first padding byte.</p>
+<h3 id="what-keysize-should-be-used">What keysize should be used?</h3>
+<p>First, when we talk about keysize what we&apos;re talking about is the
+bit-size of the RSA public <strong>modulus</strong>.</p>
+<p>As with every keysize concerns, www.keylength.com is often the answer
+(spoiler alert: 2048-bit).</p>
+<p>In addition, the
+<a href="https://wordpress.rose-hulman.edu/holden/the-mathematics-of-secrets/cryptography-by-the-numbers/" target="_blank">cryptography
+by the numbers</a> page gives some idea of what academic attacks have
+been able to do (spoiler alert: a 768-bit modulus has been broken).
+Although <a href="https://weakdh.org/" target="_blank">academic estimates</a> that state
+adversary should be able to break 1024-bit modulus.</p>
+<h3 id="is-it-safe-to-use-a-non-standardized-rsa-algorithm">Is it safe to use a non-standardized RSA algorithm?</h3>
+<p>Probably not, depending on how you use RSA there might exist more
+attacks. See
+<a href="https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf" target="_blank">Twenty
+Years of Attacks on the RSA Cryptosystem</a>.</p>
+<h3 id="are-there-any-known-issues-with-rsa-key-generation">Are there any known issues with RSA Key generation?</h3>
+<p>RSA&apos;s key generation requires good <strong>randomness</strong> and good algorithms
+to generate <strong>prime numbers</strong>. Both these requirements have been
+butchered in the past:</p>
+<ul>
+<li><a href="https://factorable.net/" target="_blank">Mining Your Ps and Qs: Detection of Widespread Weak Keys in Network Devices</a></li>
+<li><a href="https://crocs.fi.muni.cz/public/papers/rsa_ccs17" target="_blank">ROCA (CCS 2017)</a></li>
+</ul>
+<p>To ensure that a key generation algorithm is safe, it needs to be
+audited.</p>
+<h3 id="side-channel-on-rsa-a-problem">Side Channel on RSA, a problem?</h3>
+<p>not really, unless your threat model involve attackers being able to
+physically observe or tamper with your device OR you are running
+adversarial code on the same computer. TKTK (fault attacks (rowhammer),
+timing attacks, etc.)</p>
+
+                            </div>
+                            
+                        
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="gb-page-footer">
+        <div class="container">
+            <ul class="menu">
+                <li class="pull-right">
+                    <span class="service-info">Cryptography Services @ NCC Group</span>
+                </li>
+                <li>
+                    <a href="#">Return to the top</a>
+                </li>
+                <li>
+                    <a href="#">Updated Nov 30th 18</a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+</div>
+<div class="book">
+    <div class="book-summary"></div>
+</div>
+<script>
+    var gitbook = gitbook || [];
+    gitbook.push(function() {
+        gitbook.page.hasChanged({"page":{"title":"Key Exchanges (DH, ECDH, RSA)","level":"3.2","depth":1,"next":{"title":"Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)","level":"3.3","depth":1,"path":"primitives/hashing.md","ref":"primitives/hashing.md","articles":[]},"previous":{"title":"Asymmetric Encryption (RSA, ECEIS, signcryption)","level":"3.1","depth":1,"path":"primitives/asymmetric_encryption.md","ref":"primitives/asymmetric_encryption.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["theme-official","wiki-toc","theme-official"],"pluginsConfig":{"wiki-toc":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-official":{},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}},"file":{"path":"primitives/KEX.md","mtime":"2018-11-30T21:58:14.028Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-01T20:51:45.282Z"},"basePath":"..","book":{"language":""}});
+    });
+</script>   
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-wiki-toc/anchor-3.1.1.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-wiki-toc/page-toc.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

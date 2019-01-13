@@ -1,0 +1,7 @@
+== Is ECDSA secure? ==
+
+'''If you use it correctly, yes'''. By that I mean that the nonces used in signing (which are random and secret) should never repeat. This mistake has been made multiple times in the past, the most infamous example is the <a href="https://www.exophase.com/20540/hackers-describe-ps3-security-as-epic-fail-gain-unrestricted-access/">Playstation 3 hack</a>.
+
+For this reason, <a href="https://tools.ietf.org/html/rfc6979">RFC 6979: Deterministic Usage of the Digital Signature Algorithm (DSA) and Elliptic Curve Digital Signature Algorithm (ECDSA)</a> standardize a "deterministic" implementation of ECDSA which does not take a nonce as parameter. '''You SHOULD use this standard if you are using ECDSA'''.
+
+
