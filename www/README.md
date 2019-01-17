@@ -1,11 +1,20 @@
 # Introduction
 
 How to audit cryptography. From mis-use of primitives and protocols to actual implementations.
+This document targets security consultants, sysadmins and developers.
+
+## How to use
 
 **Use the search box**.
 
-**This is quite empty for now, come back later.**
+## State
 
-The target of this document is for sysadmins, developers, and security consultants.
+This is quite empty for now, come back later
+
+## About
+
+This page was started by David Wong 
+
+
 
 
