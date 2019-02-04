@@ -33,4 +33,8 @@ fosho
 
 nope, it's not uniform, hash first
 
+## resources (to delete)
+
+* https://rwc.iacr.org/2017/Slides/david.mcgrew.pptx
+
 

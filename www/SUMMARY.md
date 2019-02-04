@@ -4,11 +4,13 @@
 
 ## Protocols
 
-* [Encrypting communications (SSL/TLS, IPSEC, SSH)](protocols/tls.md)
+* [Secure Sessions](protocols/tls.md)
               
 ## Primitives
 
-* [Asymmetric Encryption (RSA, ECEIS, signcryption)](primitives/asymmetric_encryption.md)
-* [Key Exchanges (DH, ECDH, RSA)](primitives/KEX.md)
-* [Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)](primitives/hashing.md)
+* [Symmetric Encryption](primitives/symmetric_encryption.md)
+* [Asymmetric Encryption](primitives/asymmetric_encryption.md)
+* [Integrity and Authentication](primitives/MAC.md)
+* [Key Exchanges](primitives/KEX.md)
+* [Hash Functions](primitives/hashing.md)
 

@@ -1,6 +1,6 @@
 # Symmetric Encryption
 
-To encrypt arbitrary-length messages and lengthy communications, symmetric cryptography is often used instead of (or with) asymmetric cryptography. This is because it is fast. Unfortunately many protocols forget that encryption is not enough, as attackers can still tamper with the ciphertexts in order to modify the underlying plaintext. To add integrity, we often use an additional Message Authentication Code (MAC) or better, an all-in-one encryption + integrity primitive.
+To encrypt arbitrary-length messages and lengthy communications, symmetric cryptography is often used instead of (or with) [asymmetric cryptography](/primitives/asymmetric_encryption.md). This is because it is fast. Unfortunately many protocols forget that encryption is not enough, as attackers can still tamper with the ciphertexts in order to modify the underlying plaintext. To add integrity, we often use an additional [Message Authentication Code (MAC)](/primitives/MAC.md) or better, an all-in-one encryption + integrity primitive called **authenticated encryption**.
 
 ## Can AES be used alone to encrypt?
 
@@ -37,10 +37,6 @@ AES comes with three types of keys: 128-bit, 192-bit and 256-bit; while most imp
 
 **No**. AES-GCM is not nonce mis-use resistance. If nonces are repeated, the authentication key can be extracted which will destroy the integrity of future ciphertexts. For nonce-misuse resistance check [AES-GCM-SIV](https://tools.ietf.org/html/draft-irtf-cfrg-gcmsiv-08)
 
-![aes-gcm-siv](aes-gcm-siv.png)
-
-([taken from here](https://cyber.biu.ac.il/aes-gcm-siv/))
-
 ## What size should a nonce/IV be in AES-GCM?
 
 96-bit
@@ -71,8 +67,22 @@ No. It's easy to create two keys that will decrypt the ciphertext to two differe
 
 ## Is DES Insecure?
 
-Yes
-
-## Is 3DES Insecure?
-
 No
+
+## Is 3DES Secure?
+
+Yes. But not perfect.
+
+## Is RC4 Secure?
+
+**No**. RC4 has been found to have multiple biases in its keystream. This means that whatever the key used, some bits of the keystream will statistically more often appear as 0s or as 1s. Attacks taking advantage of this have been made practical by numerous research papers:
+
+* 2001 - [Weaknesses in the Key Scheduling Algorithm of RC4](https://www.cs.cornell.edu/people/egs/615/rc4_ksaproc.pdf)
+* 2001 - [A Practical Attack on Broadcast RC4]()
+* 2007 - [Permutation after RC4 Key Scheduling Reveals the Secret Key]()
+* 2013 - [On the Security of RC4 in TLS](https://www.usenix.org/conference/usenixsecurity13/technical-sessions/paper/alFardan)
+* 2015 - [All Your Biases Belong to Us: Breaking RC4 in WPA-TKIP and TLS](https://www.rc4nomore.com/vanhoef-usenix2015.pdf)
+
+The most recent attack, [RC4 NOMORE](https://www.rc4nomore.com) retrieves a 16-byte cookie in 50-75 hours. This works well with cookies and HTTPS because they are repeatedly encrypted and there are approachable ways to trigger a client to send requests, but any protocol making use of RC4 and repeatedly encrypting the same secret should be vulnerable to these attacks.
+
+[RFC 7465 contains a list of TLS cipher suite that are to be depreciated](https://tools.ietf.org/html/rfc7465#appendix-A)

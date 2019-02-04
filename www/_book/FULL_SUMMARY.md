@@ -19,7 +19,7 @@
 * [Asymmetric Encryption (RSA, ECEIS, signcryption)](primitives/asymmetric_encryption.md)
 * [Key Exchanges (DH, ECDH, RSA)](primitives/KEX.md)
 * Signature (DSA, ECDSA, EdDSA)
-* Integrity and Authentication (HMAC, KMAC)
+* [Integrity and Authentication (HMAC, KMAC)](primitives/MAC.md)
 * [Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)](primitives/hashing.md)
 * (Password-Based) Key Derivation (HKDF, PBKDF)
               
@@ -37,7 +37,7 @@
               
 ## Architecture
 
-* Authentication and Authorization (IAM, Kerberos, SSO, OAUTH)
+* Identification / Authentication and Authorization (IAM, Kerberos, SSO, OAUTH)
 * Public Key Infrastructure (Certificate Authorities, Certificate Transparency, Key Transparency)
 * Encrypting a Database (Tokenization, TDE, SSE, CryptDB, SQLCipher)
 * Storing secrets (Vault, KMS)

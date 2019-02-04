@@ -13,7 +13,7 @@ This is quite empty for now, come back later
 
 ## About
 
-This page was started by David Wong 
+This page was started by [David Wong](https://www.cryptologie.net)
 
 
 

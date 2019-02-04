@@ -152,7 +152,7 @@
 
             
 
-            Encrypting communications (SSL/TLS, IPSEC, SSH)
+            Secure Sessions
 
         
         </a>
@@ -175,6 +175,22 @@
             
     
         
+        <a href="primitives/symmetric_encryption.html" class="list-group-item ">
+        
+
+            
+
+            
+
+            Symmetric Encryption
+
+        
+        </a>
+        
+
+        
+    
+        
         <a href="primitives/asymmetric_encryption.html" class="list-group-item ">
         
 
@@ -182,7 +198,23 @@
 
             
 
-            Asymmetric Encryption (RSA, ECEIS, signcryption)
+            Asymmetric Encryption
+
+        
+        </a>
+        
+
+        
+    
+        
+        <a href="primitives/MAC.html" class="list-group-item ">
+        
+
+            
+
+            
+
+            Integrity and Authentication
 
         
         </a>
@@ -198,7 +230,7 @@
 
             
 
-            Key Exchanges (DH, ECDH, RSA)
+            Key Exchanges
 
         
         </a>
@@ -214,7 +246,7 @@
 
             
 
-            Hashing (MD5, SHA-1, SHA-2, SHA-3, BLAKE2, SIPHASH)
+            Hash Functions
 
         
         </a>
@@ -238,10 +270,14 @@
                             
                             <div class="gb-markdown book-page-inner">
                                 <h1 id="introduction">Introduction</h1>
-<p>How to audit cryptography. From mis-use of primitives and protocols to actual implementations.</p>
+<p>How to audit cryptography. From mis-use of primitives and protocols to actual implementations.
+This document targets security consultants, sysadmins and developers.</p>
+<h2 id="how-to-use">How to use</h2>
 <p><strong>Use the search box</strong>.</p>
-<p><strong>This is quite empty for now, come back later.</strong></p>
-<p>The target of this document is for sysadmins, developers, and security consultants.</p>
+<h2 id="state">State</h2>
+<p>This is quite empty for now, come back later</p>
+<h2 id="about">About</h2>
+<p>This page was started by David Wong </p>
 
                             </div>
                             
@@ -278,7 +314,7 @@
                     <a href="#">Return to the top</a>
                 </li>
                 <li>
-                    <a href="#">Updated Dec 1st 18</a>
+                    <a href="#">Updated Jan 17th 19</a>
                 </li>
             </ul>
         </div>
@@ -290,7 +326,7 @@
 <script>
     var gitbook = gitbook || [];
     gitbook.push(function() {
-        gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Encrypting communications (SSL/TLS, IPSEC, SSH)","level":"2.1","depth":1,"path":"protocols/tls.md","ref":"protocols/tls.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["theme-official","wiki-toc","theme-official"],"pluginsConfig":{"wiki-toc":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-official":{},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}},"file":{"path":"README.md","mtime":"2018-12-01T18:26:14.021Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-01T20:51:45.282Z"},"basePath":".","book":{"language":""}});
+        gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Secure Sessions","level":"2.1","depth":1,"path":"protocols/tls.md","ref":"protocols/tls.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["theme-official","wiki-toc","theme-official","livereload"],"pluginsConfig":{"livereload":{},"search":{},"wiki-toc":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"theme-official":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}},"file":{"path":"README.md","mtime":"2019-01-17T19:10:56.756Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-02-04T22:54:28.356Z"},"basePath":".","book":{"language":""}});
     });
 </script>   
 
@@ -304,6 +340,10 @@
     
         
         <script src="gitbook/gitbook-plugin-wiki-toc/page-toc.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         
