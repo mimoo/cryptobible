@@ -35,7 +35,7 @@ AES comes with three types of keys: 128-bit, 192-bit and 256-bit; while most imp
 
 ## Can a nonce be repeated in AES-GCM?
 
-**No**. AES-GCM is not nonce mis-use resistance. If nonces are repeated, the authentication key can be extracted which will destroy the integrity of future ciphertexts. For nonce-misuse resistance check [AES-GCM-SIV](https://tools.ietf.org/html/draft-irtf-cfrg-gcmsiv-08)
+**No**. AES-GCM is not nonce mis-use resistance. If nonces are repeated, the authentication key can be extracted which will destroy the integrity of future ciphertexts. This has been demonstrated live in the past, for example with [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS](https://eprint.iacr.org/2016/475.pdf). For nonce-misuse resistance check [AES-GCM-SIV](https://tools.ietf.org/html/draft-irtf-cfrg-gcmsiv-08)
 
 ## What size should a nonce/IV be in AES-GCM?
 
@@ -59,7 +59,7 @@ As no IV should repeat in AES-CBC, it is important to limit the number of messag
 
 ## AES-128 or AES-256?
 
-128
+128-bit of security is what most applications aim for nowadays. AES-256 provides around 256-bit of security and is often called "military-grade encryption" for marketing purposes. It is often used in conjunction with key exchange algorithms providing 128-bit of security and is thus not increasing the security of the protocol compared to AES-128.
 
 ## Can you trust a key to decrypt an AES-GCM ciphertext to the correct plaintext?
 
@@ -67,11 +67,15 @@ No. It's easy to create two keys that will decrypt the ciphertext to two differe
 
 ## Is DES Insecure?
 
-No
+**No**. [The Day DES Died](https://uk.sans.org/reading-room/whitepapers/vpns/paper/722) is a nice paper summarizing the situation.
 
 ## Is 3DES Secure?
 
-Yes. But not perfect.
+Yes and no. [Triple DES](https://en.wikipedia.org/wiki/Triple_DES) (or TDES, or EDE) is a 64-bit block cipher providing 112-bit of security at most, it should provide enough security in most settings, but because of the 64-bit block size it is not perfect as shown by the [Sweet32 research paper](https://www.cryptologie.net/article/373/tldr-of-the-sweet32-attack-on-the-practical-in-security-of-64-bit-block-ciphers/). 
+
+If you are in a situation where you can force a client to send many requests per second (at least like 2,000 requests per second) then this might become a problem. In reality, in most situation this number of request per second has been shown to be [too hard to achieve](https://www.cryptologie.net/article/379/about-sweet32/).
+
+Nonetheless, attacks only get better with time, and you are encouraged to deprecate this algorithm
 
 ## Is RC4 Secure?
 
@@ -83,6 +87,6 @@ Yes. But not perfect.
 * 2013 - [On the Security of RC4 in TLS](https://www.usenix.org/conference/usenixsecurity13/technical-sessions/paper/alFardan)
 * 2015 - [All Your Biases Belong to Us: Breaking RC4 in WPA-TKIP and TLS](https://www.rc4nomore.com/vanhoef-usenix2015.pdf)
 
-The most recent attack, [RC4 NOMORE](https://www.rc4nomore.com) retrieves a 16-byte cookie in 50-75 hours. This works well with cookies and HTTPS because they are repeatedly encrypted and there are approachable ways to trigger a client to send requests, but any protocol making use of RC4 and repeatedly encrypting the same secret should be vulnerable to these attacks.
+The most recent attack, [RC4 NOMORE](https://www.rc4nomore.com) retrieves a 16-byte cookie in 50-75 hours. This works well with cookies and HTTPS because they are repeatedly encrypted and there are approachable ways to trigger a client to send requests, but any protocol making use of RC4 and repeatedly encrypting the same secret should be vulnerable to these attacks. For example, an HTTP connection tunneled through SSH would be vulnerable to the exact same attack.
 
 [RFC 7465 contains a list of TLS cipher suite that are to be depreciated](https://tools.ietf.org/html/rfc7465#appendix-A)

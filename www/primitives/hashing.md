@@ -28,6 +28,10 @@ gives more explanations as to why MD5 should not be used. Its collision
 resistance has been completely broken, and it provides very little
 second pre-image resistance (2<sup>64</sup>)
 
+## Can someone find a different input from a MD5 hash?
+
+**No**. In theory, if the original input is "random enough", nobody should be able to find a different input such that `MD5(input2) = MD5(input1)`. This property is called "second pre-image resistance". MD5 is only broken for collision resistance. Nonetheless, we still consider MD5 to be cryptographically broken, and it should not be used in any applications.
+
 ## Is SHA-2 safe to be used?
 
 Yes, **if you use it correctly**. Meaning that you do not use it to
