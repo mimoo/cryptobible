@@ -9,11 +9,15 @@ This document targets security consultants, sysadmins and developers.
 
 ## State
 
-This is quite empty for now, come back later
+This is work-in-progress. You are encouraged to [contribute](https://github.com/mimoo/cryptobible).
 
 ## About
 
-This page was started by [David Wong](https://www.cryptologie.net)
+This page was initially started by [David Wong](https://www.cryptologie.net) at the [Cryptography Services](https://cryptoservices.github.io/) of [NCC Group](https://www.nccgroup.trust/).
+
+The page is now maintained by:
+
+* [David Wong](https://www.cryptologie.net)
 
 
 

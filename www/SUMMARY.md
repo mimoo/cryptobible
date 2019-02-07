@@ -13,4 +13,4 @@
 * [Integrity and Authentication](primitives/MAC.md)
 * [Key Exchanges](primitives/KEX.md)
 * [Hash Functions](primitives/hashing.md)
-
+* [Randomness](primitives/randomness.md)
