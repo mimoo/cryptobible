@@ -71,11 +71,14 @@ No. It's easy to create two keys that will decrypt the ciphertext to two differe
 
 ## Is 3DES Secure?
 
-Yes and no. [Triple DES](https://en.wikipedia.org/wiki/Triple_DES) (or TDES, or EDE) is a 64-bit block cipher providing 112-bit of security at most, it should provide enough security in most settings, but because of the 64-bit block size it is not perfect as shown by the [Sweet32 research paper](https://www.cryptologie.net/article/373/tldr-of-the-sweet32-attack-on-the-practical-in-security-of-64-bit-block-ciphers/). 
+Yes and no. [Triple DES](https://en.wikipedia.org/wiki/Triple_DES) (or TDES, or EDE) is a 64-bit block cipher providing 112-bit of security at most, it should provide enough security in most settings, but because of the 64-bit block size it is not perfect as shown by the [Sweet32 research paper](https://sweet32.info/) from Karthikeyan Bhargavan and Gaëtan Leurent ([see a video explanation here](https://www.cryptologie.net/article/373/tldr-of-the-sweet32-attack-on-the-practical-in-security-of-64-bit-block-ciphers/)).
 
-If you are in a situation where you can force a client to send many requests per second (at least like 2,000 requests per second) then this might become a problem. In reality, in most situation this number of request per second has been shown to be [too hard to achieve](https://www.cryptologie.net/article/379/about-sweet32/).
+If you are in a situation where:
 
-Nonetheless, attacks only get better with time, and you are encouraged to deprecate this algorithm
+* you can force a client to send many requests per second (at least like 2,000 requests per second) then this might become a problem. In reality, in most situation this number of request per second has been shown to be [too hard to achieve with browsers](https://www.cryptologie.net/article/379/about-sweet32/).
+* a long-lived service encrypts many many messages using the same key. At some point, it will reach a dangerous threshold and might leak information.
+
+Nonetheless, attacks only get better with time, and you are encouraged to deprecate this algorithm.
 
 ## Is RC4 Secure?
 

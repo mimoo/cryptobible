@@ -47,7 +47,7 @@
 
 * Cryptographic Libraries
 * Passwords
-* Erasing secrets from memory
+* Managing Keys and Secrets (Vault, erasing them from memory, KMS)
 * Generating Randomness
 * Fingerprinting (or hashing tuples)
 * Quantum Crypto
